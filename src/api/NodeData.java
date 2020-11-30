@@ -10,17 +10,14 @@ public class NodeData implements node_data{
     private String info = "";
     private int tag = 0;
     private geo_location location;
-    private HashMap<Integer, edge_data> edges;
 
 
     public NodeData() {
         this.key = serial++;
-        edges = new HashMap<>();
     }
 
     public NodeData(int key) {
         this.key = key;
-        edges = new HashMap<>();
     }
 
     public NodeData(NodeData copy) {
@@ -28,14 +25,12 @@ public class NodeData implements node_data{
         this.info = copy.getInfo();
         this.tag = copy.getTag();
         this.weight = copy.getWeight();
-        this.edges = new HashMap<>();
     }
 
     public NodeData(int key, int tag, String info) {
         this.key = key;
         this.tag = tag;
         this.info = info;
-        this.edges = new HashMap<>();
     }
 
     @Override

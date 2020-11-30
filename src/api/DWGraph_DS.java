@@ -94,7 +94,11 @@ public class DWGraph_DS implements directed_weighted_graph{
             edge_data newEdge = new EdgeData(src,dest,w);// The edge that will connect src to dest
 
             // If dest is src's first neighbor
-            if(nei == null) nei = new HashMap();
+            if(nei == null)
+            {
+                nei = new HashMap();
+                edges.put(src, nei);
+            }
 
             //If the nodes were already connected, don't count the edge as a new one.
             if(hasEdge(src, dest))
@@ -122,47 +126,90 @@ public class DWGraph_DS implements directed_weighted_graph{
         }
     }
 
+    /**
+     *
+     * @return Collection - A shallow copy of a collection of the nodes in this graph.
+     */
     @Override
     public Collection<node_data> getV() {
-        return null;
+        return nodes.values();
     }
 
     @Override
     public Collection<edge_data> getE(int node_id) {
-        return null;
+        //Return null if node is not in the graph or if node has no edges
+        if(!graphContainsNode(node_id) || !nodeHasEdges(node_id)) return null;
+
+        //A Hashmap representation of the edges going out of node with specified id
+        HashMap<Integer, edge_data> edgeMap = edges.get(node_id);
+
+        return edgeMap.values();
+
     }
 
     @Override
     public node_data removeNode(int key) {
+        if(graphContainsNode(key))
+        {
+
+            //Remove all edges going out of node with specified key.
+            if(nodeHasEdges(key))
+                edges.remove(key);
+
+            //Remove all edges pointing at node with specified key.
+            for(HashMap<Integer, edge_data> map : edges.values())
+            {
+                if (map != null && map.containsKey(key))
+                    map.remove(key);
+            }
+
+            return nodes.remove(key);
+        }
         return null;
     }
 
     @Override
     public edge_data removeEdge(int src, int dest) {
+        if(hasEdge(src, dest))
+        {
+            //A Hashmap representation of src's neighbors
+            HashMap<Integer, edge_data> srcNeis = edges.get(src);
+            return srcNeis.remove(dest);
+        }
         return null;
     }
 
     @Override
     public int nodeSize() {
-        return 0;
+        return nodeSize;
     }
 
     @Override
     public int edgeSize() {
-        return 0;
+        return edgeSize;
     }
 
     @Override
     public int getMC() {
-        return 0;
+        return modeCounter;
     }
 
 
-    //********* Private Methods *********//
 
-    private boolean hasEdge(int src, int dest){
+    //********* Util Methods *********//
+    void addNode(int key){
+        if(!nodes.containsKey(key))
+        {
+            node_data node = new NodeData(key);
+            nodes.put(key,node);
+            edges.put(key,null);
+            modeCounter++;
+        }
+    }
+
+    boolean hasEdge(int src, int dest){
         //If one of the nodes is not in the graph or the nodes are the same nodes
-        if(!nodes.containsKey(src) || !nodes.containsKey(dest) || src == dest) return false;
+        if(!graphContainsNode(src) || !graphContainsNode(dest) || src == dest) return false;
 
         HashMap nei = edges.get(src);//Hashmap of edges coming out of src
 
@@ -170,4 +217,19 @@ public class DWGraph_DS implements directed_weighted_graph{
         return nei.containsKey(dest);
 
     }
+
+
+    //********* Private Methods *********//
+
+    private boolean nodeHasEdges(int key){
+        return edges.containsKey(key);
+    }
+
+    private boolean graphContainsNode(int key){
+        return nodes.containsKey(key);
+    }
+
+
+
+
 }
