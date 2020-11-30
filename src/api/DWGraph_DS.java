@@ -2,7 +2,7 @@ package api;
 
 import java.util.Collection;
 
-public class DWGraph implements directed_weighted_graph{
+public class DWGraph_DS implements directed_weighted_graph{
 
 
     @Override
