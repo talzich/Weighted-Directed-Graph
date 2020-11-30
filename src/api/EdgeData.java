@@ -5,7 +5,7 @@ public class EdgeData implements edge_data {
     private int tag = 0;
     private double weight = 0;
     private String info = "";
-    private node_data src, dest;
+    private int src, dest;
 
     /**
      * Simple constructor
@@ -13,7 +13,7 @@ public class EdgeData implements edge_data {
      * @param dest - the node this edge is pointing at
      * @param weight - the weight of this edge
      */
-    public EdgeData(node_data src, node_data dest, double weight){
+    public EdgeData(int src, int dest, double weight){
         this.src = src;
         this.dest =dest;
         this.weight = weight;
@@ -23,14 +23,12 @@ public class EdgeData implements edge_data {
     //*********** Setters & Getters ***********//
     @Override
     public int getSrc() {
-        if (this.src == null) return -1;
-        return this.src.getKey();
+        return this.src;
     }
 
     @Override
     public int getDest() {
-        if(this.dest == null) return -1;
-        return this.dest.getKey();
+        return this.dest;
     }
 
     @Override
