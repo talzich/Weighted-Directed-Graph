@@ -4,7 +4,7 @@ public class EdgeData implements edge_data {
 
     private int tag = 0;
     private double weight = 0;
-    private String info = "";
+    private String info = " ";
     private int src, dest;
 
     /**
