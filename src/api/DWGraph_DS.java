@@ -52,12 +52,13 @@ public class DWGraph_DS implements directed_weighted_graph{
     public edge_data getEdge(int src, int dest) {
             if(nodes.containsKey(src) && nodes.containsKey(dest))//Both source and destination nodes are in the graph
             {
-                if(edges.containsKey(src))// If there are edges coming out of src
+                if(nodeHasEdges(src))// If there are edges coming out of src
                 {
-                    HashMap nei = edges.get(src);
-                    if(nei.containsKey(dest))
+                    HashMap nei = edges.get(src);//Address the neighbors of src
+
+                    if(nei.containsKey(dest))//If dest is one of src's neighbors
                     {
-                        return (edge_data)nei.get(dest);
+                        return (edge_data) nei.get(dest);
                     }
                 }
             }
@@ -75,6 +76,7 @@ public class DWGraph_DS implements directed_weighted_graph{
             int key = n.getKey();
             nodes.put(key,n);
             modeCounter++;
+            nodeSize++;
         }
     }
 
@@ -90,8 +92,8 @@ public class DWGraph_DS implements directed_weighted_graph{
         // Enter only if both nodes are in the graph, are different and the provided weight is non-negative
         if(nodes.containsKey(src) && nodes.containsKey(dest) && w >= 0 && dest != src)
         {
-            HashMap<Integer, edge_data> nei = edges.get(src);// The hashmap representing the edges coming out of src
-            edge_data newEdge = new EdgeData(src,dest,w);// The edge that will connect src to dest
+            // The hashmap representing the edges coming out of src
+            HashMap<Integer, edge_data> nei = edges.get(src);
 
             // If dest is src's first neighbor
             if(nei == null)
@@ -103,17 +105,27 @@ public class DWGraph_DS implements directed_weighted_graph{
             //If the nodes were already connected, don't count the edge as a new one.
             if(hasEdge(src, dest))
             {
-                double origWeight = getEdge(src, dest).getWeight();
+                edge_data origEdge = getEdge(src, dest);
+                double origWeight =origEdge.getWeight();
+
                 if(w != origWeight)
                 {
+
+                    // The edge that will connect src to dest
+                    edge_data newEdge = new EdgeData(src,dest,w);
+
                     //The actual connection
                     nei.put(dest, newEdge);
+
                     modeCounter++;
                 }
                 else return;
             }
             else
             {
+                // The edge that will connect src to dest
+                edge_data newEdge = new EdgeData(src,dest,w);
+
                 //The actual connection
                 nei.put(dest, newEdge);
                 modeCounter++;
@@ -127,7 +139,6 @@ public class DWGraph_DS implements directed_weighted_graph{
     }
 
     /**
-     *
      * @return Collection - A shallow copy of a collection of the nodes in this graph.
      */
     @Override
@@ -135,8 +146,15 @@ public class DWGraph_DS implements directed_weighted_graph{
         return nodes.values();
     }
 
+    /**
+     * This function will return a shallow copy of a collection representing all the edges going out of
+     * the node with the specified key.
+     * @param node_id - the node who's edges we will return
+     * @return collection - a collection of the edges going out node with specified key
+     */
     @Override
     public Collection<edge_data> getE(int node_id) {
+
         //Return null if node is not in the graph or if node has no edges
         if(!graphContainsNode(node_id) || !nodeHasEdges(node_id)) return null;
 
@@ -147,34 +165,60 @@ public class DWGraph_DS implements directed_weighted_graph{
 
     }
 
+    /**
+     * Removes node with specified key from the graph, alongside all edges going out of it and all edges
+     * pointing at it.
+     * @param key - The key of the node to remove.
+     * @return node_data - The node to remove.
+     */
     @Override
     public node_data removeNode(int key) {
         if(graphContainsNode(key))
         {
-
             //Remove all edges going out of node with specified key.
             if(nodeHasEdges(key))
+            {
+
+                int srcEdgeSize = getE(key).size();//Number of edges going out of the node we want to remove
+                edgeSize -= srcEdgeSize;
+                modeCounter += srcEdgeSize;
                 edges.remove(key);
+            }
 
             //Remove all edges pointing at node with specified key.
             for(HashMap<Integer, edge_data> map : edges.values())
             {
                 if (map != null && map.containsKey(key))
+                {
                     map.remove(key);
+                    edgeSize--;
+                    modeCounter++;
+                }
             }
 
+            nodeSize--;
+            modeCounter++;
             return nodes.remove(key);
         }
         return null;
     }
 
+    /**
+     * Removes edge that is going out of node with key "src" and pointing at node with key "dest"
+     * @param src - int, The key of the node from which the edge to remove is going out.
+     * @param dest - int, The key of the node to which the edge to remove is pointing.
+     * @return edgeToRemove - edge_data, The edge to remove.
+     */
     @Override
     public edge_data removeEdge(int src, int dest) {
         if(hasEdge(src, dest))
         {
             //A Hashmap representation of src's neighbors
             HashMap<Integer, edge_data> srcNeis = edges.get(src);
-            return srcNeis.remove(dest);
+            edgeSize--;
+            modeCounter++;
+            edge_data edgeToRemove = srcNeis.remove(dest);
+            return edgeToRemove;
         }
         return null;
     }
@@ -197,6 +241,12 @@ public class DWGraph_DS implements directed_weighted_graph{
 
 
     //********* Util Methods *********//
+
+    /**
+     * This method was written to help with tests.
+     * Adds node to the graph with specific key.
+     * @param key
+     */
     void addNode(int key){
         if(!nodes.containsKey(key))
         {
@@ -204,9 +254,16 @@ public class DWGraph_DS implements directed_weighted_graph{
             nodes.put(key,node);
             edges.put(key,null);
             modeCounter++;
+            nodeSize++;
         }
     }
 
+    /**
+     * This method was written to help with tests.
+     * @param src
+     * @param dest
+     * @return boolean - True iff there is an edge going out of src to dest
+     */
     boolean hasEdge(int src, int dest){
         //If one of the nodes is not in the graph or the nodes are the same nodes
         if(!graphContainsNode(src) || !graphContainsNode(dest) || src == dest) return false;
@@ -218,18 +275,20 @@ public class DWGraph_DS implements directed_weighted_graph{
 
     }
 
+    //********* Util Methods *********//
+
 
     //********* Private Methods *********//
 
     private boolean nodeHasEdges(int key){
-        return edges.containsKey(key);
+        return (edges.get(key) != null);
     }
 
     private boolean graphContainsNode(int key){
         return nodes.containsKey(key);
     }
 
-
+    //********* Private Methods *********//
 
 
 }
