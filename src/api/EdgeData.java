@@ -56,4 +56,20 @@ public class EdgeData implements edge_data {
         this.tag = t;
     }
     //*********** Setters & Getters ***********//
+
+    @Override
+    public boolean equals(Object obj){
+
+        //Simple check to see if we can cast
+        if(obj == null) return false;
+        if(obj.getClass() != this.getClass()) return false;
+
+        final edge_data other = (edge_data) obj;
+
+        return (this.weight == other.getWeight() && this.dest == other.getDest() && this.src == other.getSrc()
+        && this.tag == other.getTag() && this.info.equals(other.getInfo()));
+
+
+
+    }
 }

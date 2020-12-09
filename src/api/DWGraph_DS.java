@@ -275,6 +275,54 @@ public class DWGraph_DS implements directed_weighted_graph{
         return modeCounter;
     }
 
+    /**
+     * A simple equals method. Checks to see whether this graph and another graph are equal.
+     * Two graph being equal means that all their nodes have the same keys,all nodes are connected to the
+     * same neighbors and with the same edge weight.
+     *
+     * @param obj
+     * @return True iff the graphs are equal by the terms mentioned above.
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final directed_weighted_graph other = (directed_weighted_graph) obj;
+
+        //If there is a difference in the number of nodes or edges than the graphs are not equal
+        if (this.nodeSize != other.nodeSize() || this.edgeSize != other.edgeSize()) return false;
+
+        //Collection representing the nodes in this graph
+        Collection<node_data> thisNodes = this.getV();
+
+        //Collection that will represent every nodes outgoing edges
+        Collection<edge_data> nodeOutgoingEdges;
+
+        //For every node in this graph, return false if it is not equal to its counterpart in other graph
+        for (node_data currNode : thisNodes) {
+            int currKey = currNode.getKey();
+            node_data otherNode = other.getNode(currKey);
+            if (!currNode.equals(otherNode)) return false;
+            nodeOutgoingEdges = this.getE(currKey);
+
+            //For every edge going out of this node, return false if it is not equal to its counterpart in other graph
+            for (edge_data currEdge : nodeOutgoingEdges){
+                int currSrc = currEdge.getSrc();
+                int currDest = currEdge.getDest();
+                edge_data otherEdge = other.getEdge(currSrc, currDest);
+                if (!currEdge.equals(otherEdge)) return false;
+            }
+
+        }
+        return true;
+    }
 
 
     //********* Util Methods *********//

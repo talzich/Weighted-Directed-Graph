@@ -78,4 +78,23 @@ public class NodeData implements node_data{
     public void setTag(int t) {
         this.tag = t;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final node_data other = (node_data) obj;
+
+
+        return (this.key == other.getKey() && this.info.equals(getInfo()) && this.tag == other.getTag()
+        && this.weight == other.getWeight());
+
+    }
 }
