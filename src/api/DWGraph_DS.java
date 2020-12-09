@@ -312,12 +312,18 @@ public class DWGraph_DS implements directed_weighted_graph{
             if (!currNode.equals(otherNode)) return false;
             nodeOutgoingEdges = this.getE(currKey);
 
-            //For every edge going out of this node, return false if it is not equal to its counterpart in other graph
-            for (edge_data currEdge : nodeOutgoingEdges){
-                int currSrc = currEdge.getSrc();
-                int currDest = currEdge.getDest();
-                edge_data otherEdge = other.getEdge(currSrc, currDest);
-                if (!currEdge.equals(otherEdge)) return false;
+            if(nodeOutgoingEdges == null)
+            {
+                if(other.getE(currKey) != null) return false;
+            }
+            else {
+                //For every edge going out of this node, return false if it is not equal to its counterpart in other graph
+                for (edge_data currEdge : nodeOutgoingEdges) {
+                    int currSrc = currEdge.getSrc();
+                    int currDest = currEdge.getDest();
+                    edge_data otherEdge = other.getEdge(currSrc, currDest);
+                    if (!currEdge.equals(otherEdge)) return false;
+                }
             }
 
         }

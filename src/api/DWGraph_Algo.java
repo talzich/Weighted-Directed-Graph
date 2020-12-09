@@ -23,9 +23,64 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
     @Override
     public directed_weighted_graph copy() {
-        return null;
+        if(graph == null) return null;
+
+        //The graph we will be returning
+        directed_weighted_graph copy = new DWGraph_DS();
+
+        //If original graph is empty, a new empty graph will bu sufficient to return.
+        if(graph.edgeSize() == 0 && graph.nodeSize() == 0) return copy;
+
+        //We know those are not null because we passed the former if statement
+        Collection<node_data> thisNodes = graph.getV();
+        Collection<edge_data> currNeighbors;
+
+        //run on all the nodes of this graph
+        for(node_data currNode: thisNodes)
+        {
+            int currKey = currNode.getKey();
+
+            //If copy does not contain a node with currKey
+            if(copy.getNode(currKey) == null)
+            {
+                //copy the current node and add him to the copy graph
+                node_data copiedNode = new NodeData(currNode);
+                copy.addNode(copiedNode);
+            }
+            //run on all the edges going out from the current node if exist
+            currNeighbors = graph.getE(currKey);
+            if(currNeighbors != null) {
+
+                for(edge_data currEdge : currNeighbors)
+                {
+                    int destKey = currEdge.getDest();
+                    double currEdgeWeight = currEdge.getWeight();
+                    if(copy.getEdge(currKey,destKey) == null)
+                    {
+                        if (copy.getNode(destKey) == null)
+                        {
+                            node_data origDest = graph.getNode(destKey);
+                            node_data copiedDest = new NodeData(origDest);
+                            copy.addNode(copiedDest);
+
+                        }
+                        copy.connect(currKey,destKey,currEdgeWeight);
+
+                    }
+                }
+            }
+        }
+
+
+        return copy;
     }
 
+    /**
+     * A method to check whether a graph is strongly connected.
+     * This method uses a dfs algorithm.
+     * @return True iff  this graph is strongly connected, meaning, every node in this graph can be reached
+     * from every other node in this graph.
+     */
     @Override
     public boolean isConnected() {
 

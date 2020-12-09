@@ -20,11 +20,11 @@ public class NodeData implements node_data{
         this.key = key;
     }
 
-    public NodeData(NodeData copy) {
-        this.key = copy.getKey();
-        this.info = copy.getInfo();
-        this.tag = copy.getTag();
-        this.weight = copy.getWeight();
+    public NodeData(node_data other) {
+        this.key = other.getKey();
+        this.info = other.getInfo();
+        this.tag = other.getTag();
+        this.weight = other.getWeight();
     }
 
     public NodeData(int key, int tag, String info) {
