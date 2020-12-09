@@ -151,6 +151,27 @@ class DWGraph_DSTest {
 
     }
 
+    @Test
+    public void rmNode() {
+        directed_weighted_graph graph = new DWGraph_DS();
+        for (int i = 0; i < 5000; i++) {
+            graph.addNode(new NodeData(i));
+        }
+        Connect(graph);
+        graph.removeNode(0);
+        for (int i = 0; i < 5000; i++) {
+            graph.removeNode(i);
+        }
+    }
+
+    private void Connect(directed_weighted_graph graph) {
+        for (int i = 0; i < graph.nodeSize(); i++) {
+            for (int j = 0; j < graph.nodeSize(); j++) {
+                graph.connect(i, j, 12.5);
+            }
+        }
+    }
+
 
 
 
