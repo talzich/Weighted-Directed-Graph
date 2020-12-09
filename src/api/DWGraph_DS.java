@@ -1,8 +1,6 @@
 package api;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class DWGraph_DS implements directed_weighted_graph{
 
@@ -100,14 +98,14 @@ public class DWGraph_DS implements directed_weighted_graph{
             HashSet<Integer> inNei = ingoing.get(dest);
 
             // If dest is src's first neighbor
-            if(outNei == null)
+            if(outNei == null || outNei.isEmpty())
             {
                 outNei = new HashMap();
                 edges.put(src, outNei);
             }
 
             //If src is dest's first neighbor
-            if(inNei == null)
+            if(inNei == null || inNei.isEmpty())
             {
                 inNei = new HashSet<>();
                 inNei.add(src);
@@ -196,6 +194,15 @@ public class DWGraph_DS implements directed_weighted_graph{
                 int outEdgeSize = getE(key).size();//Number of edges going out of the node we want to remove
                 edgeSize -= outEdgeSize;
                 modeCounter += outEdgeSize;
+
+                //A set representation of all the nodes that key is pointing at
+                Set<Integer> dests = edges.get(key).keySet();
+
+                //Go over all the nodes key is pointing at and remove key from their ingoing set
+                for(Integer dest : dests)
+                {
+                    ingoing.get(dest).remove(key);
+                }
                 edges.remove(key);
             }
 
@@ -205,6 +212,15 @@ public class DWGraph_DS implements directed_weighted_graph{
                 int inEdgeSize = ingoing.get(key).size();
                 edgeSize -= inEdgeSize;
                 modeCounter += inEdgeSize;
+
+                //A set representation of all the nodes pointing at key
+                Set<Integer> srcs = ingoing.get(key);
+
+                //Go over all the nodes pointing at key and remove key from their outgoing set
+                for (Integer src : srcs)
+                {
+                    edges.get(src).remove(key);
+                }
                 ingoing.remove(key);
             }
 
