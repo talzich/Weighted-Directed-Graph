@@ -2,7 +2,7 @@ package api;
 
 import java.util.HashMap;
 
-public class NodeData implements node_data{
+public class NodeData implements node_data, Comparable<node_data>{
 
     private static int serial = 0;
     private int key = 0;
@@ -96,5 +96,14 @@ public class NodeData implements node_data{
         return (this.key == other.getKey() && this.info.equals(getInfo()) && this.tag == other.getTag()
         && this.weight == other.getWeight());
 
+    }
+
+    @Override
+    public int compareTo(node_data o) {
+        if (o == null) return 1;
+
+        if(this.getWeight() > o.getWeight()) return 1;
+        else if (this.getWeight() == o.getWeight()) return 0;
+        else return -1;
     }
 }
