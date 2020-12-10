@@ -115,7 +115,29 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        double pathLength;
+
+        //Return null if the graph was not initialized
+        if (graph == null) return -1;
+
+        //Pointers
+        node_data source = graph.getNode(src);
+        node_data destination = graph.getNode(dest);
+
+        //If one of the nodes does not exist in the graph there is no path between them
+        if (source == null || destination == null) return -1;
+
+        //Distance from a node to itself is 0
+        if (source == destination) return 0;
+
+        dijkstra(source);
+
+        pathLength = destination.getWeight();
+
+        if(pathLength == Integer.MAX_VALUE*2) pathLength = -1;
+
+        return pathLength;
+
     }
 
     @Override
