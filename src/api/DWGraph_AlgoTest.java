@@ -31,7 +31,7 @@ class DWGraph_AlgoTest {
     @Test
     void copy() {
 
-        directed_weighted_graph copy = gAlgo.copy();
+        DWGraph_DS copy = (DWGraph_DS) gAlgo.copy();
         assertEquals(graph, copy);
 
         graph.addNode(5);
@@ -39,7 +39,22 @@ class DWGraph_AlgoTest {
         graph.connect(5,6,1);
         assertNotEquals(graph,copy);
 
-        
+        copy.addNode(5);
+        copy.addNode(6);
+        assertNotEquals(graph,copy);
+
+        copy.connect(5,6,2);
+        assertNotEquals(graph,copy);
+
+        copy.connect(5,6,1);
+        assertEquals(graph,copy);
+
+        graph.removeEdge(5,6);
+        assertNotEquals(graph,copy);
+
+        copy.removeEdge(5,6);
+        assertEquals(graph,copy);
+
     }
 
     @Test
