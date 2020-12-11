@@ -109,6 +109,7 @@ public class NodeData implements node_data, Comparable<node_data>{
 
     @Override
     public String toString(){
-        String s = "Key: " + this.getKey() + ""
+        String s = ("Key: " + this.getKey() + " Weight: " + this.getWeight() + " Info: " + this.getInfo());
+        return s;
     }
 }
