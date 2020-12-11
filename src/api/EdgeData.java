@@ -75,7 +75,7 @@ public class EdgeData implements edge_data {
 
     @Override
     public String toString(){
-        String s = ("Weight: " + this.getWeight() + " Src: " + this.getSrc() + " Dest: " + this.getDest());
+        String s = ("Weight: " + this.getWeight() + " Src: " + this.getSrc() + " Dest: " + this.getDest() + " Info: " + this.getInfo());
         return s;
     }
 }

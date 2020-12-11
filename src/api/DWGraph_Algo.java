@@ -252,6 +252,7 @@ public class DWGraph_Algo implements dw_graph_algorithms{
                 }
             }
 
+            setUnvisited();
             directed_weighted_graph reversed = reverseGraph(graph);
             while (!finish.isEmpty())
             {
@@ -317,30 +318,26 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
     private directed_weighted_graph reverseGraph(directed_weighted_graph graph){
         //Pointers
-        int currKey;
         Collection<edge_data> edges;
 
         //We don't want to compromise the original graph so we will copy it and reverse its edges
         directed_weighted_graph reversed = this.copy();
 
-        setEdgesInfo(reversed);
-
-        for(node_data node : reversed.getV())
+        for(node_data node : graph.getV())
         {
-            currKey = node.getKey();
-            if(graph.getE(currKey) != null)
-            {
-                edges = graph.getE(currKey);
-                for (edge_data edge : edges)
-                {
-                    if(edge.getInfo() != flipped)
-                    {
-                        reverseEdge(edge, reversed);
+            edges = graph.getE(node.getKey());
+            if(edges != null && !edges.isEmpty()){
+                for(edge_data edge : edges){
+                    if(graph.getEdge(edge.getDest(),edge.getSrc()) == null) {
+                        if (reversed.getEdge(edge.getSrc(), edge.getDest()).getInfo() != flipped) {
+                            reversed.removeEdge(edge.getSrc(), edge.getDest());
+                            reversed.connect(edge.getDest(), edge.getSrc(), edge.getWeight());
+                            reversed.getEdge(edge.getDest(), edge.getSrc()).setInfo(flipped);
+                        }
                     }
                 }
             }
         }
-
         return reversed;
     }
 
