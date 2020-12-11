@@ -104,6 +104,11 @@ public class NodeData implements node_data, Comparable<node_data>{
 
         if(this.getWeight() > o.getWeight()) return 1;
         else if (this.getWeight() == o.getWeight()) return 0;
-        else return -1;
+        return -1;
+    }
+
+    @Override
+    public String toString(){
+        String s = "Key: " + this.getKey() + ""
     }
 }
