@@ -17,7 +17,6 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         if (g != null) this.graph = g;
     }
 
-
     @Override
     public directed_weighted_graph getGraph() {
         return this.graph;
@@ -146,88 +145,49 @@ public class DWGraph_Algo implements dw_graph_algorithms{
     //********* Private Methods *********//
 
     /**
-     * Depth First Search algorithm to mark True for every node that can be reached from src
-     *
-     * @param src     - Node to check paths from
-     * @param visited - A int->boolean map to mark which nodes can be reached from src
+     * This method is a java implementation of Dijkstra's algorithm to find shortest path between two vertices in
+     * a graph.
+     * @param src
      */
-    private void dfs(int src, HashMap<Integer, Boolean> visited) {
-        if (visited == null) return;
-        //This stack will determine which node's neighbors will be explored next.
-        Stack<Integer> stack = new Stack();
-        visited.put(src, true);
-        stack.push(src);
-
-        //While there are more nodes to explore
-        while (!stack.isEmpty()) {
-            //next node to explore
-            int nextStep = stack.pop();
-
-            //All the edges going out of nextStep
-            Collection neighbors = graph.getE(nextStep);
-            if (neighbors == null) {
-                visited.put(nextStep, false);
-                return;
-            }
-            Iterator<edge_data> neiIter = neighbors.iterator();
-
-            //While nextStep has more edges
-            while (neiIter.hasNext()) {
-                edge_data currEdge = neiIter.next();
-
-                //The node currEdge is pointing to
-                int dest = currEdge.getDest();
-
-                //Checks if dest was already visited during this dfs run
-                boolean keyVisited = visited.get(dest);
-
-                //If dest was not visited we need to remember to explore it next and mark it as visited
-                if (!keyVisited) {
-                    visited.put(dest, true);
-                    stack.push(dest);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Sets all values in a int -> boolean map to false
-     * @param visited
-     */
-    private void setFalse(HashMap<Integer, Boolean> visited) {
-        if(visited == null) return;
-        for(Integer key: visited.keySet())
-        {
-            visited.put(key,false);
-        }
-    }
-
     private void Dijkstra(node_data src){
 
-
+        //This queue will track which node we want to explore next
         PriorityQueue<node_data> pq = new PriorityQueue<>();
+
+        //A nodes distance from itself is 0
         src.setWeight(0);
-        src.setInfo(visited); // set the info of the first node to black,
-        pq.add(src); // add the first node to the list
-        while (!pq.isEmpty()) { // while the list is not empty
-            src = pq.poll(); // node = the first node in the list, and poll him from the list
-            src.setInfo(visited); // set this node to black
+
+        // We mark which nodes we already visited and add them to the queue for further exploration
+        pq.add(src);
+        src.setInfo(visited);
+
+        while (!pq.isEmpty()) {
+            //We will explore this node next
+            src = pq.poll();
+            src.setInfo(visited);
+
+            //If this node has no outgoing edges, there is nothing more to explore
             if(graph.getE(src.getKey()) == null) continue;
+
+            //Exploring this node's outgoing edges
             for (edge_data pointer : graph.getE(src.getKey())){
                 node_data destNode = graph.getNode(pointer.getDest());
-                if (destNode.getWeight() > src.getWeight() + pointer.getWeight()) { // if the tag of the node is bigger then the previews node + the weight of the edge - update the tag of the node
-                    destNode.setWeight(src.getWeight() + pointer.getWeight());
+
+                //If the current path is shorter than the older one, replace nodes weight the correct one
+                double pathWeight = src.getWeight() + pointer.getWeight();
+                if (destNode.getWeight() > pathWeight) {
+                    destNode.setWeight(pathWeight);
+
+                    //Mark current src as dest's current 'cheapest' perant
                     parents.put(destNode,src);
                 }
-                if (destNode.getInfo().equals(unvisited)) { // if the neighbor isn't visit yet set him to grey
-                    pq.add(destNode); // add him to the list
+
+                if (destNode.getInfo().equals(unvisited)) {
+                    pq.add(destNode);
                 }
             }
+         }
     }
-
-    //********* Private Methods *********//
-}
 
     private int Kosaraju(){
         //Pointers
@@ -323,6 +283,8 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         //We don't want to compromise the original graph so we will copy it and reverse its edges
         directed_weighted_graph reversed = this.copy();
 
+        setEdgesInfo(reversed);
+
         for(node_data node : graph.getV())
         {
             edges = graph.getE(node.getKey());
@@ -355,22 +317,6 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         }
     }
 
-    private void reverseEdge(edge_data edge, directed_weighted_graph reversedGraph) {
-        if (edge == null) return;
-
-        //Pointers
-        int src = edge.getSrc();
-        int dest = edge.getDest();
-        double weight = edge.getWeight();
-
-        //The flip
-        reversedGraph.removeEdge(src, dest);
-        reversedGraph.connect(dest, src, weight);
-
-        //Setting the info
-        reversedGraph.getEdge(dest,src).setInfo(flipped);
-    }
-
     /**
      * Sets all tags of nodes to positive infinity and all infos to "white"
      */
@@ -392,4 +338,6 @@ public class DWGraph_Algo implements dw_graph_algorithms{
             node.setInfo(unvisited);
         }
     }
+
+    //********* Private Methods *********//
 }
