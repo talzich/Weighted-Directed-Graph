@@ -130,11 +130,13 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         //Distance from a node to itself is 0
         if (source == destination) return 0;
 
+        infWeights();
+
         dijkstra(source);
 
         pathLength = destination.getWeight();
 
-        if(pathLength == Integer.MAX_VALUE*2) pathLength = -1;
+        if(pathLength == Double.POSITIVE_INFINITY) pathLength = -1;
 
         return pathLength;
 
@@ -216,15 +218,17 @@ public class DWGraph_Algo implements dw_graph_algorithms{
     }
 
     private void dijkstra(node_data src){
+
+
         PriorityQueue<node_data> pq = new PriorityQueue<>();
-        src.setTag(0);
+        src.setWeight(0);
         src.setInfo(visited); // set the info of the first node to black,
         pq.add(src); // add the first node to the list
         while (!pq.isEmpty()) { // while the list is not empty
             src = pq.poll(); // node = the first node in the list, and poll him from the list
             src.setInfo(visited); // set this node to black
+            if(graph.getE(src.getKey()) == null) continue;
             for (edge_data pointer : graph.getE(src.getKey())){
-
                 node_data destNode = graph.getNode(pointer.getDest());
                 if (destNode.getWeight() > src.getWeight() + pointer.getWeight()) { // if the tag of the node is bigger then the previews node + the weight of the edge - update the tag of the node
                     destNode.setWeight(src.getWeight() + pointer.getWeight());
@@ -242,12 +246,12 @@ public class DWGraph_Algo implements dw_graph_algorithms{
     /**
      * Sets all tags of nodes to positive infinity and all infos to "white"
      */
-    private void infTags(){
+    private void infWeights(){
         node_data node;
         Iterator<node_data> iter = graph.getV().iterator(); // run on the HashMap gr
         while (iter.hasNext()) {
             node = iter.next();
-            node.setTag(Integer.MAX_VALUE*2);
+            node.setWeight(Double.POSITIVE_INFINITY);
             node.setInfo(unvisited);
         }
     }
