@@ -3,9 +3,7 @@ package api;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class DWGraph_Algo implements dw_graph_algorithms{
@@ -159,6 +157,7 @@ public class DWGraph_Algo implements dw_graph_algorithms{
             node.put("key", currNode.getKey());
             node.put("info", currNode.getInfo());
             node.put("weight", currNode.getWeight());
+            node.put("tag", currNode.getTag());
             nodes.add(node);
             Collection<edge_data> myNeis = graph.getE(currNode.getKey());
             if(myNeis != null && !myNeis.isEmpty()) {
@@ -174,6 +173,9 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
         thisGraph.put("nodes", nodes);
         thisGraph.put("edges", edges);
+        thisGraph.put("node size", graph.nodeSize());
+        thisGraph.put("edge size", graph.edgeSize());
+
 
         try(FileWriter fw = new FileWriter(file))
         {
@@ -190,7 +192,67 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
     @Override
     public boolean load(String file) {
-        return false;
+
+        JSONParser parser = new JSONParser();
+
+        try
+        {
+            JSONObject myGraph = (JSONObject) parser.parse(new FileReader(file));
+
+            JSONArray Jnodes = (JSONArray) myGraph.get("nodes");
+            JSONArray Jedges = (JSONArray) myGraph.get("edges");
+
+            node_data node;
+
+            clearGraph();
+
+
+            Iterator<JSONObject> nodeIterator = Jnodes.iterator();
+            while(nodeIterator.hasNext())
+            {
+                JSONObject jNode = nodeIterator.next();
+                long key = (long)jNode.get("key");
+                double weight = (double) jNode.get("weight");
+                long tag = (long) jNode.get("tag");
+                String info = (String) jNode.get("info");
+
+                node = new NodeData((int)key, weight, info, (int)tag);
+                graph.addNode(node);
+            }
+
+            Iterator<JSONObject> edgeIterator = Jedges.iterator();
+            while(edgeIterator.hasNext())
+            {
+                JSONObject jEdge = edgeIterator.next();
+                long src = (long) jEdge.get("src");
+                long dest = (long) jEdge.get("dest");
+                double weight  = (double) jEdge.get("weight");
+
+                graph.connect((int)src,(int)dest,weight);
+            }
+
+
+
+
+
+            return true;
+        }
+        catch (FileNotFoundException e){
+            e.printStackTrace();
+            return false;
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        catch (ParseException e){
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     //********* Private Methods *********//
@@ -415,6 +477,51 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         }
     }
 
+    private void clearGraph(){
+        if (graph == null) return;
+        for(node_data currNode : graph.getV())
+        {
+            graph.removeNode(currNode.getKey());
+        }
+    }
+
     //********* Private Methods *********//
+
+    public static void main(String[] args) {
+        directed_weighted_graph connectedGraph = new DWGraph_DS();
+
+        node_data n0 = new NodeData();
+        node_data n1 = new NodeData();
+        node_data n2 = new NodeData();
+        node_data n3 = new NodeData();
+        node_data n4 = new NodeData();
+        node_data n5 = new NodeData();
+
+        connectedGraph.addNode(n0);
+        connectedGraph.addNode(n1);
+        connectedGraph.addNode(n2);
+        connectedGraph.addNode(n3);
+        connectedGraph.addNode(n4);
+
+        connectedGraph.connect(0,1,1);
+        connectedGraph.connect(1,2,1);
+        connectedGraph.connect(2,3,1);
+        connectedGraph.connect(2,4,1);
+        connectedGraph.connect(4,2,1);
+        connectedGraph.connect(3,0,1);
+
+        dw_graph_algorithms alg1 = new DWGraph_Algo();
+        alg1.init(connectedGraph);
+        alg1.save("connected");
+
+        dw_graph_algorithms alg2 = new DWGraph_Algo();
+        directed_weighted_graph g = new DWGraph_DS();
+        alg2.init(g);
+        alg2.load("connected.json");
+
+        System.out.println(alg2.getGraph().toString());
+
+
+    }
 
 }
