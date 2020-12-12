@@ -27,6 +27,13 @@ public class NodeData implements node_data, Comparable<node_data>{
         this.weight = other.getWeight();
     }
 
+    public NodeData(int key, double weight, String info, int tag){
+        this.key = key;
+        this.weight = weight;
+        this.info = info;
+        this.tag = tag;
+    }
+
     public NodeData(int key, int tag, String info) {
         this.key = key;
         this.tag = tag;
