@@ -1,5 +1,11 @@
 package api;
 
+import org.json.simple.*;
+import org.json.simple.parser.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class DWGraph_Algo implements dw_graph_algorithms{
@@ -134,7 +140,52 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
     @Override
     public boolean save(String file) {
-        return false;
+
+        if (!file.endsWith(".json") && file.contains(".")) return false;
+        else if(!file.endsWith(".json") && !file.contains("."))
+            file = file + ".json";
+
+        //We will write this JSON object to our file
+        JSONObject thisGraph = new JSONObject();
+
+        JSONArray nodes = new JSONArray();
+        JSONArray edges = new JSONArray();
+        JSONObject node;
+        JSONObject edge;
+
+        for(node_data currNode : graph.getV())
+        {
+            node = new JSONObject();
+            node.put("key", currNode.getKey());
+            node.put("info", currNode.getInfo());
+            node.put("weight", currNode.getWeight());
+            nodes.add(node);
+            Collection<edge_data> myNeis = graph.getE(currNode.getKey());
+            if(myNeis != null && !myNeis.isEmpty()) {
+                for (edge_data currEdge : graph.getE(currNode.getKey())) {
+                    edge = new JSONObject();
+                    edge.put("src", currEdge.getSrc());
+                    edge.put("dest", currEdge.getDest());
+                    edge.put("weight", currEdge.getWeight());
+                    edges.add(edge);
+                }
+            }
+        }
+
+        thisGraph.put("nodes", nodes);
+        thisGraph.put("edges", edges);
+
+        try(FileWriter fw = new FileWriter(file))
+        {
+            fw.write(thisGraph.toString());
+            fw.flush();
+            return true;
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -197,6 +248,7 @@ public class DWGraph_Algo implements dw_graph_algorithms{
     private int Kosaraju(){
         //Pointers
         node_data node;
+
 
         //This stack will keep track of which node we will explore next.
         Stack<Integer> finish = new Stack<>();
