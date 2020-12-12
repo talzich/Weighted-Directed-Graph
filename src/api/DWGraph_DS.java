@@ -330,6 +330,18 @@ public class DWGraph_DS implements directed_weighted_graph{
         return true;
     }
 
+    @Override
+    public String toString(){
+        String s = "Node size: " + this.nodeSize() + "\nEdge size: " + this.edgeSize() +
+                "\nNodes: {\n";
+
+        for(node_data node : this.getV())
+        {
+            s = s + node.toString() +"\n";
+        }
+
+        return s;
+    }
 
     //********* Util Methods *********//
 
