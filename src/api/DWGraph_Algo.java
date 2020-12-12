@@ -230,11 +230,6 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
                 graph.connect((int)src,(int)dest,weight);
             }
-
-
-
-
-
             return true;
         }
         catch (FileNotFoundException e){
@@ -483,45 +478,6 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         {
             graph.removeNode(currNode.getKey());
         }
-    }
-
-    //********* Private Methods *********//
-
-    public static void main(String[] args) {
-        directed_weighted_graph connectedGraph = new DWGraph_DS();
-
-        node_data n0 = new NodeData();
-        node_data n1 = new NodeData();
-        node_data n2 = new NodeData();
-        node_data n3 = new NodeData();
-        node_data n4 = new NodeData();
-        node_data n5 = new NodeData();
-
-        connectedGraph.addNode(n0);
-        connectedGraph.addNode(n1);
-        connectedGraph.addNode(n2);
-        connectedGraph.addNode(n3);
-        connectedGraph.addNode(n4);
-
-        connectedGraph.connect(0,1,1);
-        connectedGraph.connect(1,2,1);
-        connectedGraph.connect(2,3,1);
-        connectedGraph.connect(2,4,1);
-        connectedGraph.connect(4,2,1);
-        connectedGraph.connect(3,0,1);
-
-        dw_graph_algorithms alg1 = new DWGraph_Algo();
-        alg1.init(connectedGraph);
-        alg1.save("connected");
-
-        dw_graph_algorithms alg2 = new DWGraph_Algo();
-        directed_weighted_graph g = new DWGraph_DS();
-        alg2.init(g);
-        alg2.load("connected.json");
-
-        System.out.println(alg2.getGraph().toString());
-
-
     }
 
 }
