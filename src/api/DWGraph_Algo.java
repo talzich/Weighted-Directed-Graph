@@ -189,6 +189,11 @@ public class DWGraph_Algo implements dw_graph_algorithms{
          }
     }
 
+    /**
+     * This method is a java implementation of Kosarahu's algorithm to find number of SCC in a graph.
+     * a SCC is a component in a graph in which from every vertex there is a path to every other vertex.
+     * If the number of SCCs in the graph is 1, that means the graph itself is a SCC thus, th graph is connected.
+     */
     private int Kosaraju(){
         //Pointers
         node_data node;
@@ -232,6 +237,12 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         return SCC.size();
     }
 
+    /**
+     * This method is an implementation of a DFS algorithm. We use it in order to fill the stack Kosaraju's algorithm is using.
+     * @param node
+     * @param comp
+     * @param graphT
+     */
     private void DFSEmpty(node_data node, Set<Integer> comp, directed_weighted_graph graphT) {
         //Pointers
         edge_data currEdge;
@@ -253,6 +264,12 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         }
     }
 
+    /**
+     * This method is an implementation of a DFS algorithm. We use it in order to empty the stack Kosaraju's algorithm is using.
+     * @param node
+     * @param finishTime
+     * @param
+     */
     private void DFSFill(node_data node, Stack<Integer> finishTime){
         //Pointers
         edge_data currEdge;
@@ -303,6 +320,10 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         return reversed;
     }
 
+    /**
+     * Sets info of all edges in given graph to "not flipped". It is used to reverse a graph
+     * @param reversed
+     */
     private void setEdgesInfo(directed_weighted_graph reversed) {
         String notFlipped = "not flipped";
         for(node_data node : reversed.getV())
@@ -330,6 +351,9 @@ public class DWGraph_Algo implements dw_graph_algorithms{
         }
     }
 
+    /**
+     * Sets the info of all nodes in caller graph to "unvisitd"
+     */
     private void setUnvisited(){
         node_data node;
         Iterator<node_data> iter = graph.getV().iterator();
@@ -340,4 +364,5 @@ public class DWGraph_Algo implements dw_graph_algorithms{
     }
 
     //********* Private Methods *********//
+
 }
