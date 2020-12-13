@@ -133,7 +133,25 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
     @Override
     public List<node_data> shortestPath(int src, int dest) {
-        return null;
+        double size = shortestPathDist(src, dest);
+        if (size == -1) return null;
+        node_data source = graph.getNode(src);
+        node_data son = graph.getNode(dest);
+        node_data dad;
+        ArrayList<node_data> lst = new ArrayList<>(); // list represent the path
+        lst.add(son);
+        if (size == 0) return lst; // if the list is empty return
+        for (node_data pointer : parents.values()){
+            dad = parents.get(son);
+            lst.add(dad);
+            if (dad == source) break;
+            son = dad;
+        }
+        ArrayList<node_data> reversLst = new ArrayList<>();
+        for (int i = 0; i < lst.size(); i++) {
+            reversLst.add(lst.get(lst.size() - i - 1)); // revers the list
+        }
+        return reversLst;
     }
 
     @Override
@@ -195,8 +213,13 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
         JSONParser parser = new JSONParser();
 
+        if (!file.endsWith(".json") && file.contains(".")) return false;
+        else if(!file.endsWith(".json") && !file.contains("."))
+            file = file + ".json";
+
         try
         {
+
             JSONObject myGraph = (JSONObject) parser.parse(new FileReader(file));
 
             JSONArray Jnodes = (JSONArray) myGraph.get("nodes");
@@ -204,6 +227,7 @@ public class DWGraph_Algo implements dw_graph_algorithms{
 
             node_data node;
 
+            if(graph == null) graph = new DWGraph_DS();
             clearGraph();
 
 
