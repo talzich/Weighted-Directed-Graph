@@ -309,12 +309,9 @@ public class DWGraph_Algo implements dw_graph_algorithms {
      * If the number of SCCs in the graph is 1, that means the graph itself is a SCC thus, th graph is connected.
      */
     private int Kosaraju() {
-        //Pointers
-        Collection<node_data> nodes = this.graph.getV();
-        int nodeSize = graph.nodeSize();
 
         //If the graph is empty or has only one node it is vacuously connected
-        if (nodeSize <= 1) return 1;
+        if (graph.nodeSize() <= 1) return 1;
 
         //This stack will keep track of which node finished exploring its children
         Stack<Integer> KStack = new Stack<>();
@@ -327,7 +324,7 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 
         setUnvisited(graph);
 
-        for (node_data node : nodes) {
+        for (node_data node : graph.getV()) {
             if (node.getInfo() == unvisited) {
                 node.setInfo(visited);
                 DFSFill(KStack, DFSStack, node);
@@ -335,14 +332,11 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         }
 
         directed_weighted_graph reversed = reverseGraph(graph);
-        setUnvisited(reversed);
 
         while (!KStack.isEmpty()) {
             Set<Integer> comp = DFSEmpty(DFSStack, SCC, reversed, KStack.pop());
             if (comp != null) SCC.add(comp);
         }
-
-
         return SCC.size();
     }
 
@@ -399,8 +393,8 @@ public class DWGraph_Algo implements dw_graph_algorithms {
      * @param
      */
     private void DFSFill(Stack<Integer> KStack, Stack<Integer> DFSStack, node_data node) {
-        DFSStack.push(node.getKey());
 
+        DFSStack.push(node.getKey());
 
         OUTER:
         while (!DFSStack.isEmpty()) {
@@ -409,7 +403,6 @@ public class DWGraph_Algo implements dw_graph_algorithms {
                 continue;
             }
             Collection<edge_data> edges = graph.getE(DFSStack.peek());
-
 
             for (edge_data edge : edges) {
                 node_data currChild = graph.getNode(edge.getDest());
@@ -424,25 +417,18 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     }
 
     private directed_weighted_graph reverseGraph(directed_weighted_graph graph) {
-        //Pointers
-        Collection<edge_data> edges;
-
         //We don't want to compromise the original graph so we will copy it and reverse its edges
-        directed_weighted_graph reversed = this.copy();
-
-        setEdgesInfo(reversed);
+        directed_weighted_graph reversed = new DWGraph_DS();
 
         for (node_data node : graph.getV()) {
-            edges = graph.getE(node.getKey());
-            if (edges != null && !edges.isEmpty()) {
+            node.setInfo(unvisited);
+            reversed.addNode(new NodeData(node));
+        }
+        for (node_data node : graph.getV()){
+            Collection<edge_data> edges = graph.getE(node.getKey());
+            if(edges != null) {
                 for (edge_data edge : edges) {
-                    if (graph.getEdge(edge.getDest(), edge.getSrc()) == null) {
-                        if (reversed.getEdge(edge.getSrc(), edge.getDest()).getInfo() != flipped) {
-                            reversed.removeEdge(edge.getSrc(), edge.getDest());
-                            reversed.connect(edge.getDest(), edge.getSrc(), edge.getWeight());
-                            reversed.getEdge(edge.getDest(), edge.getSrc()).setInfo(flipped);
-                        }
-                    }
+                    reversed.connect(edge.getDest(), edge.getSrc(), edge.getWeight());
                 }
             }
         }
@@ -497,5 +483,4 @@ public class DWGraph_Algo implements dw_graph_algorithms {
             graph.removeNode(currNode.getKey());
         }
     }
-
 }
