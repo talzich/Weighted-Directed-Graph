@@ -93,12 +93,6 @@ public class DWGraph_Algo implements dw_graph_algorithms{
      */
     @Override
     public boolean isConnected() {
-
-        setUnvisited();
-
-        //Will count the number of SCC in this graph, if it's more than one, the graph is not connected.
-        int SCCSize = 0;
-
         return Kosaraju() == 1;
     }
 
@@ -328,102 +322,123 @@ public class DWGraph_Algo implements dw_graph_algorithms{
      */
     private int Kosaraju(){
         //Pointers
-        node_data node;
+        Collection<node_data> nodes = this.graph.getV();
+        int nodeSize = graph.nodeSize();
 
+        //If the graph is empty or has only one node it is vacuously connected
+        if(nodeSize <= 1) return 1;
 
-        //This stack will keep track of which node we will explore next.
-        Stack<Integer> finish = new Stack<>();
+        //This stack will keep track of which node finished exploring its children
+        Stack<Integer> KStack = new Stack<>();
+
+        //This stack will manage the way we explore our graph and will maintain a DFS approach
+        Stack<Integer> DFSStack = new Stack<>();
 
         //This list will contain sets that represent the SCCs int this graph.
-        List<Set<Integer>> SCC = new LinkedList<>();
+        Set<Set<Integer>> SCC = new HashSet<>();
 
-        Collection<node_data> nodes = graph.getV();
+        setUnvisited(graph);
 
-        if(nodes != null && !nodes.isEmpty()){
-            Iterator<node_data> iter = nodes.iterator();
-            while(iter.hasNext()) {
-                node_data next = iter.next();
-                if(next.getInfo() != visited)
-                {
-                    next.setInfo(visited);
-                    DFSFill(next, finish);
-                }
-            }
-
-            setUnvisited();
-            directed_weighted_graph reversed = reverseGraph(graph);
-            while (!finish.isEmpty())
+        for (node_data node : nodes)
+        {
+            if(node.getInfo() == unvisited)
             {
-                node = reversed.getNode(finish.pop());
-                if(node.getInfo() != visited)
-                {
-                    Set<Integer> component = new HashSet<>();
-                    component.add(node.getKey());
-                    SCC.add(component);
-                    DFSEmpty(node,component, reversed);
-                }
-
+                node.setInfo(visited);
+                DFSFill(KStack, DFSStack, node);
             }
         }
-        else return 1;
+
+        directed_weighted_graph reversed = reverseGraph(graph);
+        setUnvisited(reversed);
+
+        while (!KStack.isEmpty())
+        {
+            Set<Integer> comp = DFSEmpty(DFSStack, SCC, reversed, KStack.pop());
+            if(comp != null) SCC.add(comp);
+        }
+
 
         return SCC.size();
     }
 
     /**
-     * This method is an implementation of a DFS algorithm. We use it in order to fill the stack Kosaraju's algorithm is using.
-     * @param node
-     * @param comp
-     * @param graphT
+     * This method is an implementation of a DFS algorithm. We use it in order to empty the stack Kosaraju's algorithm is using.
+     * @param DFSStack - The stack that will help us maintain a DFS
+     * @param SCC - The set that will contain all of the nodes in the current SCC
+     * @param graphT - The reversed graph we will be working on
      */
-    private void DFSEmpty(node_data node, Set<Integer> comp, directed_weighted_graph graphT) {
-        //Pointers
-        edge_data currEdge;
-        node_data next;
-        Collection<edge_data> edges = graphT.getE(node.getKey());
+    private Set<Integer> DFSEmpty(Stack<Integer> DFSStack, Set<Set<Integer>> SCC, directed_weighted_graph graphT, int currKey) {
+        //Pointer
+        node_data currNode = graphT.getNode(currKey);
 
-        if(edges != null && !edges.isEmpty()){
-            Iterator<edge_data> iter = edges.iterator();
-            while(iter.hasNext()){
-                next = graphT.getNode(iter.next().getDest());
-                if(next.getInfo() != visited)
+        if (currNode.getInfo() == unvisited)
+        {
+            currNode.setInfo(visited);
+
+            //We will be filling and returning this set
+            Set<Integer> comp = new HashSet<>();
+            comp.add(currNode.getKey());
+
+            DFSStack.push(currNode.getKey());
+
+            while (!DFSStack.isEmpty()) {
+
+                if (graphT.getE(DFSStack.peek()) == null)
                 {
-                    next.setInfo(visited);
-                    comp.add(next.getKey());
-                    DFSEmpty(next, comp, graphT);
+                    DFSStack.pop();
+                    continue;
+                }
+
+                Collection<edge_data> edges = graphT.getE(DFSStack.pop());
+                INNER:
+                for (edge_data edge : edges)
+                {
+                    node_data currChild = graphT.getNode(edge.getDest());
+                    if(currChild.getInfo() == unvisited)
+                    {
+                        currChild.setInfo(visited);
+                        DFSStack.push(currChild.getKey());
+                        comp.add(currChild.getKey());
+                        break INNER;
+                    }
                 }
             }
-            return;
+            return comp;
         }
+        return null;
     }
 
     /**
-     * This method is an implementation of a DFS algorithm. We use it in order to empty the stack Kosaraju's algorithm is using.
+     * This method is an implementation of a DFS algorithm. We use it in order to fill the stack Kosaraju's algorithm is using.
      * @param node
-     * @param finishTime
+     * @param KStack
      * @param
      */
-    private void DFSFill(node_data node, Stack<Integer> finishTime){
-        //Pointers
-        edge_data currEdge;
-        node_data next;
-        Collection<edge_data> edges = graph.getE(node.getKey());
+    private void DFSFill(Stack<Integer> KStack, Stack<Integer> DFSStack, node_data node){
+        DFSStack.push(node.getKey());
 
-
-        if(edges != null && !edges.isEmpty()) {
-            Iterator<edge_data> iter = edges.iterator();
-            while(iter.hasNext())
+        while(!DFSStack.isEmpty())
+        {
+            if(graph.getE(DFSStack.peek()) == null)
             {
-                next = graph.getNode(iter.next().getDest());
-                if(next.getInfo() != visited)
-                {
-                    next.setInfo(visited);
-                    DFSFill(next, finishTime);
+                KStack.push(DFSStack.pop());
+                continue;
+            }
+            Collection<edge_data> edges = graph.getE(DFSStack.peek());
+            INNER:
+            while(true) {
+                for (edge_data edge : edges) {
+                    node_data currChild = graph.getNode(edge.getDest());
+                    if (currChild.getInfo() == unvisited) {
+                        currChild.setInfo(visited);
+                        DFSStack.push(currChild.getKey());
+                        break INNER;
+                    }
                 }
+                KStack.push(DFSStack.pop());
+                break;
             }
         }
-        finishTime.push(node.getKey());
-        return;
     }
 
     private directed_weighted_graph reverseGraph(directed_weighted_graph graph){
@@ -487,9 +502,9 @@ public class DWGraph_Algo implements dw_graph_algorithms{
     /**
      * Sets the info of all nodes in caller graph to "unvisitd"
      */
-    private void setUnvisited(){
+    private void setUnvisited(directed_weighted_graph g){
         node_data node;
-        Iterator<node_data> iter = graph.getV().iterator();
+        Iterator<node_data> iter = g.getV().iterator();
         while (iter.hasNext()) {
             node = iter.next();
             node.setInfo(unvisited);
