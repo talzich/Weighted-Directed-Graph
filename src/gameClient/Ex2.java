@@ -8,21 +8,36 @@ import org.json.*;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class Ex2 {
+public class Ex2 implements Runnable{
 
     Arena arena;
     MyFrame winodw;
     directed_weighted_graph graph;
     List<CL_Pokemon> pokemons;
     List<CL_Agent> agents;
+    int level , id;
+
+    private void login(){
+
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter ID: ");
+        id = scanner.nextInt();
+
+        System.out.println("Please enter level [0-23]: ");
+        level = scanner.nextInt();
+
+    }
 
     /**
      * This method initializes the objects needed for placing and moving the agents in this level
      * @param level
      * @throws JSONException
      */
-    private void init(int level) throws JSONException {
+    public void init(int level) throws JSONException {
 
         game_service game = Game_Server_Ex2.getServer(level);
 
@@ -43,8 +58,8 @@ public class Ex2 {
         }
         catch (JSONException e){e.printStackTrace();}
 
-        placeAgents(maxAgents, game);
         updateEdges();
+        placeAgents(maxAgents, game);
 
         arena.setAgents(game.getAgents(), graph);
         agents = arena.getAgents();
@@ -94,6 +109,22 @@ public class Ex2 {
             }
 
         }
+    }
+
+    public void moveAgents(){
+
+    }
+
+    @Override
+    public void run(){
+
+    }
+
+    public static void main(String[] args) {
+
+        Thread client = new Thread(new Ex2());
+        client.start();
+
     }
 
 }
