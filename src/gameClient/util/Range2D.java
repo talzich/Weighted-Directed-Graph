@@ -15,7 +15,8 @@ public class Range2D {
 	public Range2D(Range2D w) {
 		_x_range = new Range(w._x_range);
 		_y_range = new Range(w._y_range);
-	} 
+	}
+
 	public Point3D getPortion(geo_location p) {
 		double x = _x_range.getPortion(p.x());
 		double y = _y_range.getPortion(p.y());

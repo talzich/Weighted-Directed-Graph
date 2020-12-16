@@ -32,10 +32,12 @@ public class CL_Agent {
 			_id = -1;
 			setSpeed(0);
 		}
+
+		//Gets a String that looks like json and updates this agent's fields accordingly
 		public void update(String json) {
 			JSONObject line;
 			try {
-				// "GameServer":{"graph":"A0","pokemons":3,"agents":1}}
+
 				line = new JSONObject(json);
 				JSONObject ttt = line.getJSONObject("Agent");
 				int id = ttt.getInt("id");
