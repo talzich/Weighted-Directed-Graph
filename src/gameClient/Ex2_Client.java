@@ -15,8 +15,10 @@
 //public class Ex2_Client implements Runnable{
 //	private static MyFrame _win;
 //	private static Arena _ar;
+//
 //	public static void main(String[] a) {
-//		Thread client = new Thread(new Ex2_Client());
+//
+//	    Thread client = new Thread(new Ex2_Client());
 //		client.start();
 //	}
 //
@@ -88,58 +90,58 @@
 //	 * @param src
 //	 * @return
 //	 */
-////	private static int nextNode(directed_weighted_graph g, int src) {
-////		int ans = -1;
-////		Collection<edge_data> ee = g.getE(src);
-////		Iterator<edge_data> itr = ee.iterator();
-////		int s = ee.size();
-////		int r = (int)(Math.random()*s);
-////		int i=0;
-////		while(i<r) {itr.next();i++;}
-////		ans = itr.next().getDest();
-////		return ans;
-////	}
-////	private void init(int level) {
-////		game_service game = Game_Server_Ex2.getServer(level);
-////
-////		_ar = new Arena();
-////
-////		_ar.setGraph(game.getGraph());
-////		graph = arena.getGraph();
-////
-////		arena.setPokemons(game.getPokemons());
-////		pokemons = arena.getPokemons();
-////
-////		arena.setAgents(game.getAgents(), graph);
-////		agents = arena.getAgents();
-////
-////
-////		winodw = new MyFrame("test Ex2");
-////		winodw.setSize(1000, 700);
-////		winodw.update(arena);
-////
-////
-////		//win.show();
-////
-////		String info = game.toString();
-////		JSONObject line;
-////		try {
-////			line = new JSONObject(info);
-////			JSONObject ttt = line.getJSONObject("GameServer");
-////			int rs = ttt.getInt("agents");
-////			System.out.println(info);
-////			System.out.println(game.getPokemons());
-////			int src_node = 0;  // arbitrary node, you should start at one of the pokemon
-////			ArrayList<CL_Pokemon> cl_fs = Arena.getPokemons(game.getPokemons());
-//////            for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),gg);}
-////			for(int a = 0;a<rs;a++) {
-////				int ind = a%cl_fs.size();
-////				CL_Pokemon c = cl_fs.get(ind);
-////				int nn = c.get_edge().getDest();
-////				if(c.getType()<0 ) {nn = c.get_edge().getSrc();}
-////
-////				game.addAgent(nn);
-////			}
-////		}
-////		catch (JSONException e) {e.printStackTrace();}
-////	}
+//	private static int nextNode(directed_weighted_graph g, int src) {
+//		int ans = -1;
+//		Collection<edge_data> ee = g.getE(src);
+//		Iterator<edge_data> itr = ee.iterator();
+//		int s = ee.size();
+//		int r = (int)(Math.random()*s);
+//		int i=0;
+//		while(i<r) {itr.next();i++;}
+//		ans = itr.next().getDest();
+//		return ans;
+//	}
+//	private void init(int level) {
+//		game_service game = Game_Server_Ex2.getServer(level);
+//
+//		_ar = new Arena();
+//
+//		_ar.setGraph(game.getGraph());
+//		graph = arena.getGraph();
+//
+//		arena.setPokemons(game.getPokemons());
+//		pokemons = arena.getPokemons();
+//
+//		arena.setAgents(game.getAgents(), graph);
+//		agents = arena.getAgents();
+//
+//
+//		winodw = new MyFrame("test Ex2");
+//		winodw.setSize(1000, 700);
+//		winodw.update(arena);
+//
+//
+//		//win.show();
+//
+//		String info = game.toString();
+//		JSONObject line;
+//		try {
+//			line = new JSONObject(info);
+//			JSONObject ttt = line.getJSONObject("GameServer");
+//			int rs = ttt.getInt("agents");
+//			System.out.println(info);
+//			System.out.println(game.getPokemons());
+//			int src_node = 0;  // arbitrary node, you should start at one of the pokemon
+//			ArrayList<CL_Pokemon> cl_fs = Arena.getPokemons(game.getPokemons());
+////            for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),gg);}
+//			for(int a = 0;a<rs;a++) {
+//				int ind = a%cl_fs.size();
+//				CL_Pokemon c = cl_fs.get(ind);
+//				int nn = c.get_edge().getDest();
+//				if(c.getType()<0 ) {nn = c.get_edge().getSrc();}
+//
+//				game.addAgent(nn);
+//			}
+//		}
+//		catch (JSONException e) {e.printStackTrace();}
+//	}
