@@ -1,5 +1,8 @@
 package api;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.annotations.JsonAdapter;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -411,6 +414,7 @@ public class DWGraph_Algo implements dw_graph_algorithms {
                     DFSStack.push(currChild.getKey());
                     continue OUTER;
                 }
+
             }
             KStack.push(DFSStack.pop());
         }
@@ -482,5 +486,17 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         for (node_data currNode : graph.getV()) {
             graph.removeNode(currNode.getKey());
         }
+    }
+
+    //********* Private Methods *********//
+
+    //********* Util Methods *********//
+
+    public static directed_weighted_graph setGraphJSON(String json){
+
+        Gson g = new Gson();
+        directed_weighted_graph graph = (directed_weighted_graph) g.fromJson(json, DWGraph_Algo.class);
+        return graph;
+
     }
 }

@@ -201,7 +201,7 @@ class AlgoTest {
     @Test
     public void TestE3()
     {
-        DWGraph_DS G=ConnectedGraph(1000000);
+        DWGraph_DS G=ConnectedGraph(10000);
         DWGraph_Algo A=new DWGraph_Algo();
         A.init(G);
         boolean flag=A.isConnected();
@@ -210,7 +210,7 @@ class AlgoTest {
     @Test
     public void TestE4()
     {
-        DWGraph_DS G=ConnectedGraph2(4000);
+        DWGraph_DS G=ConnectedGraph2(100000);
         DWGraph_Algo A=new DWGraph_Algo();
         A.init(G);
         boolean flag=A.isConnected();
