@@ -22,33 +22,35 @@ import java.util.List;
  *
  */
 public class Arena {
-	public static final double EPS1 = 0.001, EPS2=EPS1*EPS1, EPS=EPS2;
-	private directed_weighted_graph _gg;
-	private List<CL_Agent> _agents;
-	private List<CL_Pokemon> _pokemons;
-	private List<String> _info;
+
+	public static final double EPS =0.00001;
+	private directed_weighted_graph graph;
+	private List<CL_Agent> agents;
+	private List<CL_Pokemon> pokemons;
+	private List<String> info;
 	private static Point3D MIN = new Point3D(0, 100,0);
 	private static Point3D MAX = new Point3D(0, 100,0);
 
 	public Arena() {;
-		_info = new ArrayList<String>();
+		info = new ArrayList<>();
 	}
-	private Arena(directed_weighted_graph g, List<CL_Agent> r, List<CL_Pokemon> p) {
-		_gg = g;
-		this.setAgents(r);
-		this.setPokemons(p);
+
+	private Arena(directed_weighted_graph graph, List<CL_Agent> agents, List<CL_Pokemon> pokemons) {
+		this.graph = graph;
+		this.agents = agents;
+		this.pokemons = pokemons;
 	}
 	public void setPokemons(List<CL_Pokemon> f) {
-		this._pokemons = f;
+		this.pokemons = f;
 	}
 	public void setAgents(List<CL_Agent> f) {
-		this._agents = f;
+		this.agents = f;
 	}
-	public void setGraph(directed_weighted_graph g) {this._gg =g;}//init();}
+	public void setGraph(directed_weighted_graph g) {this.graph =g;}//init();}
 	private void init( ) {
 		MIN=null; MAX=null;
 		double x0=0,x1=0,y0=0,y1=0;
-		Iterator<node_data> iter = _gg.getV().iterator();
+		Iterator<node_data> iter = graph.getV().iterator();
 		while(iter.hasNext()) {
 			geo_location c = iter.next().getLocation();
 			if(MIN==null) {x0 = c.x(); y0=c.y(); x1=x0;y1=y0;MIN = new Point3D(x0,y0);}
@@ -62,18 +64,18 @@ public class Arena {
 		MAX = new Point3D(x1+dx/10,y1+dy/10);
 		
 	}
-	public List<CL_Agent> getAgents() {return _agents;}
-	public List<CL_Pokemon> getPokemons() {return _pokemons;}
+	public List<CL_Agent> getAgents() {return agents;}
+	public List<CL_Pokemon> getPokemons() {return pokemons;}
 
 	
 	public directed_weighted_graph getGraph() {
-		return _gg;
+		return graph;
 	}
-	public List<String> get_info() {
-		return _info;
+	public List<String> getInfo() {
+		return info;
 	}
-	public void set_info(List<String> _info) {
-		this._info = _info;
+	public void setInfo(List<String> info) {
+		this.info = info;
 	}
 
 	////////////////////////////////////////////////////
@@ -131,7 +133,7 @@ public class Arena {
 		boolean ans = false;
 		double dist = src.distance(dest);
 		double d1 = src.distance(p) + p.distance(dest);
-		if(dist>d1-EPS2) {ans = true;}
+		if(dist>d1- EPS) {ans = true;}
 		return ans;
 	}
 	private static boolean isOnEdge(geo_location p, int s, int d, directed_weighted_graph g) {
