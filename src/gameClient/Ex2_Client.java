@@ -107,7 +107,7 @@
 //		_ar = new Arena();
 //
 //		_ar.setGraph(game.getGraph());
-//		graph = arena.getGraph();
+//		graph = _ar.getGraph();
 //
 //		arena.setPokemons(game.getPokemons());
 //		pokemons = arena.getPokemons();
