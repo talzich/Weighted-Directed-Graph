@@ -13,7 +13,7 @@ public class CL_Agent {
 		private static int _seed = 3331;
 		private int _id;
 	//	private long _key;
-		private geo_location _pos;
+		private geo_location position;
 		private double _speed;
 		private edge_data _curr_edge;
 		private node_data _curr_node;
@@ -28,26 +28,27 @@ public class CL_Agent {
 			_gg = g;
 			setMoney(0);
 			this._curr_node = _gg.getNode(start_node);
-			_pos = _curr_node.getLocation();
+			position = _curr_node.getLocation();
 			_id = -1;
 			setSpeed(0);
 		}
 		public void update(String json) {
-			JSONObject line;
+
+			JSONObject jString;
 			try {
-				// "GameServer":{"graph":"A0","pokemons":3,"agents":1}}
-				line = new JSONObject(json);
-				JSONObject ttt = line.getJSONObject("Agent");
-				int id = ttt.getInt("id");
+
+				jString = new JSONObject(json);
+				JSONObject agent = jString.getJSONObject("Agent");
+				int id = agent.getInt("id");
 				if(id==this.getID() || this.getID() == -1) {
 					if(this.getID() == -1) {_id = id;}
-					double speed = ttt.getDouble("speed");
-					String p = ttt.getString("pos");
+					double speed = agent.getDouble("speed");
+					String p = agent.getString("pos");
 					Point3D pp = new Point3D(p);
-					int src = ttt.getInt("src");
-					int dest = ttt.getInt("dest");
-					double value = ttt.getDouble("value");
-					this._pos = pp;
+					int src = agent.getInt("src");
+					int dest = agent.getInt("dest");
+					double value = agent.getDouble("value");
+					this.position = pp;
 					this.setCurrNode(src);
 					this.setSpeed(speed);
 					this.setNextNode(dest);
@@ -68,7 +69,7 @@ public class CL_Agent {
 					+ "\"src\":"+this._curr_node.getKey()+","
 					+ "\"dest\":"+d+","
 					+ "\"speed\":"+this.getSpeed()+","
-					+ "\"pos\":\""+_pos.toString()+"\""
+					+ "\"pos\":\""+ position.toString()+"\""
 					+ "}"
 					+ "}";
 			return ans;	
@@ -95,7 +96,7 @@ public class CL_Agent {
 			return toJSON();
 		}
 		public String toString1() {
-			String ans=""+this.getID()+","+_pos+", "+isMoving()+","+this.getValue();	
+			String ans=""+this.getID()+","+ position +", "+isMoving()+","+this.getValue();
 			return ans;
 		}
 		public int getID() {
@@ -105,7 +106,7 @@ public class CL_Agent {
 	
 		public geo_location getLocation() {
 			// TODO Auto-generated method stub
-			return _pos;
+			return position;
 		}
 
 		
@@ -146,9 +147,9 @@ public class CL_Agent {
 				geo_location dest = _gg.getNode(get_curr_edge().getDest()).getLocation();
 				geo_location src = _gg.getNode(get_curr_edge().getSrc()).getLocation();
 				double de = src.distance(dest);
-				double dist = _pos.distance(dest);
+				double dist = position.distance(dest);
 				if(this.get_curr_fruit().get_edge()==this.get_curr_edge()) {
-					 dist = _curr_fruit.getLocation().distance(this._pos);
+					 dist = _curr_fruit.getLocation().distance(this.position);
 				}
 				double norm = dist/de;
 				double dt = w*norm / this.getSpeed(); 
