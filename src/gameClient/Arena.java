@@ -201,30 +201,36 @@ public class Arena {
 		return ans;
 	}
 
-	// ********** Beautified ********** //
-
 	private static Range2D GraphRange(directed_weighted_graph g) {
-		Iterator<node_data> itr = g.getV().iterator();
-		double x0=0,x1=0,y0=0,y1=0;
+
+		double x0 = 0, x1 = 0, y0 = 0, y1 = 0;
 		boolean first = true;
-		while(itr.hasNext()) {
-			geo_location p = itr.next().getLocation();
+
+		for(node_data node : g.getV())
+		{
+			geo_location pos = node.getLocation();
 			if(first) {
-				x0=p.x(); x1=x0;
-				y0=p.y(); y1=y0;
+				x0=pos.x(); x1=x0;
+				y0=pos.y(); y1=y0;
 				first = false;
 			}
 			else {
-				if(p.x()<x0) {x0=p.x();}
-				if(p.x()>x1) {x1=p.x();}
-				if(p.y()<y0) {y0=p.y();}
-				if(p.y()>y1) {y1=p.y();}
+				if(pos.x()<x0) {x0=pos.x();}
+				if(pos.x()>x1) {x1=pos.x();}
+				if(pos.y()<y0) {y0=pos.y();}
+				if(pos.y()>y1) {y1=pos.y();}
 			}
 		}
+
 		Range xr = new Range(x0,x1);
 		Range yr = new Range(y0,y1);
 		return new Range2D(xr,yr);
 	}
+
+	// ********** Beautified ********** //
+
+
+
 	public static Range2Range w2f(directed_weighted_graph g, Range2D frame) {
 		Range2D world = GraphRange(g);
 		Range2Range ans = new Range2Range(world, frame);
