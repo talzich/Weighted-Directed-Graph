@@ -81,101 +81,81 @@ public class Agent {
         }
     }
 
-    //@Override
-    public int getSrcNode() {
-        return this.currNode.getKey();
-    }
-
+    /**
+     * This method produces a JSON like String to be used in other methods.
+     * @return String
+     */
     public String toJSON() {
-        int d = this.getNextNode();
-        String ans = "{\"Agent\":{"
+        int nextKey = this.getNextNode();
+        String json = "{\"Agent\":{"
                 + "\"id\":" + this.id + ","
                 + "\"value\":" + this.value + ","
                 + "\"src\":" + this.currNode.getKey() + ","
-                + "\"dest\":" + d + ","
+                + "\"dest\":" + nextKey + ","
                 + "\"speed\":" + this.getSpeed() + ","
                 + "\"pos\":\"" + position.toString() + "\""
                 + "}"
                 + "}";
-        return ans;
+        return json;
     }
 
-    private void setValue(double value) {
-        this.value = value;
-    }
+    public String toString() { return toJSON(); }
 
+    /**
+     * This methods stores the right value in this agent's currEdge field
+     * @param dest
+     * @return
+     */
     public boolean setNextNode(int dest) {
-        boolean ans = false;
+        boolean status = false;
         int src = this.currNode.getKey();
         this.currEdge = graph.getEdge(src, dest);
-        if (currEdge != null) {
-            ans = true;
-        } else {
-            currEdge = null;
-        }
-        return ans;
+        if (currEdge != null) {status = true;}
+        else {currEdge = null;}
+        return status;
     }
 
-    public void setCurrNode(int src) {
-        this.currNode = graph.getNode(src);
-    }
-
-    public boolean isMoving() {
-        return this.currEdge != null;
-    }
-
-    public String toString() {
-        return toJSON();
-    }
-
-    public String toString1() {
-        String ans = "" + this.getID() + "," + position + ", " + isMoving() + "," + this.getValue();
-        return ans;
-    }
-
-    public int getID() {
-        // TODO Auto-generated method stub
-        return this.id;
-    }
-
-    public geo_location getLocation() {
-        // TODO Auto-generated method stub
-        return position;
-    }
-
-
-    public double getValue() {
-        // TODO Auto-generated method stub
-        return this.value;
-    }
-
-
+    /**
+     * This method returns the destination of the edge this agent is currently on
+     * @return
+     */
     public int getNextNode() {
-        int ans = -2;
-        if (this.currEdge == null) {
-            ans = -1;
-        } else {
-            ans = this.currEdge.getDest();
-        }
-        return ans;
+        int nextNode;
+        if (this.currEdge == null) { nextNode = -1; }
+        else { nextNode = this.currEdge.getDest(); }
+        return nextNode;
     }
 
-    public double getSpeed() {
-        return this.speed;
-    }
 
-    public void setSpeed(double v) {
-        this.speed = v;
-    }
+    // ********** Setters & Getters ********** //
+    public int getSrcNode() {return this.currNode.getKey();}
 
-    public CL_Pokemon getCurrFruit() {
-        return currFruit;
-    }
+    private void setValue(double value) {this.value = value;}
 
-    public void setCurrFruit(CL_Pokemon curr_fruit) {
-        this.currFruit = curr_fruit;
-    }
+    public void setCurrNode(int src) {this.currNode = graph.getNode(src);}
 
+    public boolean isMoving() {return this.currEdge != null;}
+
+    public int getID() { return this.id; }
+
+    public geo_location getLocation() { return position; }
+
+    public double getValue() { return this.value; }
+
+    public double getSpeed() { return this.speed; }
+
+    public void setSpeed(double v) { this.speed = v; }
+
+    public CL_Pokemon getCurrFruit() { return currFruit; }
+
+    public edge_data getCurrEdge() { return this.currEdge; }
+
+    public void set_sg_dt(long _sg_dt) { this._sg_dt = _sg_dt; }
+    // ********** Setters & Getters ********** //
+
+
+    // ********** Not Sure ********** //
+    
     public void set_SDT(long ddtt) {
         long ddt = ddtt;
         if (this.currEdge != null) {
@@ -194,15 +174,10 @@ public class Agent {
         this.set_sg_dt(ddt);
     }
 
-    public edge_data getCurrEdge() {
-        return this.currEdge;
-    }
-
     public long get_sg_dt() {
         return _sg_dt;
     }
 
-    public void set_sg_dt(long _sg_dt) {
-        this._sg_dt = _sg_dt;
-    }
+    // ********** Not Sure ********** //
+
 }
