@@ -12,7 +12,6 @@ public class CL_Agent {
 		private static int _count = 0;
 		private static int _seed = 3331;
 		private int _id;
-	//	private long _key;
 		private geo_location position;
 		private double _speed;
 		private edge_data _curr_edge;
