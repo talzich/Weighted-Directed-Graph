@@ -17,9 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class represents a multi Agents Arena which move on a graph - grabs Pokemons and avoid the Zombies.
- * @author boaz.benmoshe
- *
+ * This class is a utility class used to parse JSON Strings, find edges of pokemons and manage range of GUI
+ * @author tal.zichlinsky
+ * @author alon.eshed
  */
 public class Arena {
 
@@ -39,36 +39,6 @@ public class Arena {
 	public Arena() {
 		info = new ArrayList<>();
 	}
-
-
-	// ********** Setters & Getters **********//
-
-	public void setPokemons(List<CL_Pokemon> pokemons) {
-		this.pokemons = pokemons;
-	}
-
-	public void setAgents(List<CL_Agent> agents) {
-		this.agents = agents;
-	}
-
-	public void setGraph(directed_weighted_graph graph) {this.graph =graph;}
-
-	public List<CL_Agent> getAgents() {return agents;}
-
-	public List<CL_Pokemon> getPokemons() {return pokemons;}
-
-	public directed_weighted_graph getGraph() {
-		return graph;
-	}
-
-	public List<String> getInfo() {
-		return info;
-	}
-
-	// ********** Setters & Getters **********//
-
-
-	// ********** Beautified ********** //
 
 	/**
 	 * This method parses JSON-like Strings and returns the appropriate list of agents
@@ -148,6 +118,37 @@ public class Arena {
 		}
 	}
 
+
+	// ********** Setters & Getters **********//
+
+	public void setPokemons(List<CL_Pokemon> pokemons) {
+		this.pokemons = pokemons;
+	}
+
+	public void setAgents(List<CL_Agent> agents) {
+		this.agents = agents;
+	}
+
+	public void setGraph(directed_weighted_graph graph) {this.graph =graph;}
+
+	public List<CL_Agent> getAgents() {return agents;}
+
+	public List<CL_Pokemon> getPokemons() {return pokemons;}
+
+	public directed_weighted_graph getGraph() {
+		return graph;
+	}
+
+	public List<String> getInfo() {
+		return info;
+	}
+
+	// ********** Setters & Getters **********//
+
+
+
+	// ********** Private Methods ********** //
+
 	/**
 	 * The first in a set of three methods that help updateEdge determine on which edge a given pokemon is.
 	 * This methods determines the direction of the edge this pokemon is on.
@@ -201,6 +202,13 @@ public class Arena {
 		return ans;
 	}
 
+	// ********** Private Methods ********** //
+
+
+
+
+	// ********** GUI ********** //
+
 	private static Range2D GraphRange(directed_weighted_graph g) {
 
 		double x0 = 0, x1 = 0, y0 = 0, y1 = 0;
@@ -227,15 +235,16 @@ public class Arena {
 		return new Range2D(xr,yr);
 	}
 
-	// ********** Beautified ********** //
-
-
-
 	public static Range2Range w2f(directed_weighted_graph g, Range2D frame) {
+
 		Range2D world = GraphRange(g);
 		Range2Range ans = new Range2Range(world, frame);
 		return ans;
+
 	}
+
+	// ********** GUI ********** //
+
 
 
 
@@ -262,5 +271,7 @@ public class Arena {
 	/*public void setInfo(List<String> info) {
 		this.info = info;
 	}*/
+
+	// ********** Looks Unnecessary ********** //
 
 }
