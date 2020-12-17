@@ -70,6 +70,12 @@ public class Arena {
 
 	// ********** Beautified ********** //
 
+	/**
+	 * This method parses JSON-like Strings and returns the appropriate list of agents
+	 * @param agentsJSON
+	 * @param g
+	 * @return
+	 */
 	public static List<CL_Agent> parseAgents(String agentsJSON, directed_weighted_graph g) {
 
 		ArrayList<CL_Agent> agents = new ArrayList<>();
@@ -91,6 +97,11 @@ public class Arena {
 		return agents;
 	}
 
+	/**
+	 * This method parses JSON-like Strings and returns the appropriate list of pokemons
+	 * @param pokemonsJSON
+	 * @return
+	 */
 	public static ArrayList<CL_Pokemon> parsePokemons(String pokemonsJSON) {
 
 		ArrayList<CL_Pokemon> pokemons = new  ArrayList<>();
@@ -120,6 +131,11 @@ public class Arena {
 		return pokemons;
 	}
 
+	/**
+	 * This methods updates the 'edge' field of a given pokemon to the actual edge said pokemon is on
+	 * @param pokemon
+	 * @param g
+	 */
 	public static void updateEdge(CL_Pokemon pokemon, directed_weighted_graph g) {
 
 		for(node_data node : g.getV())
@@ -132,29 +148,60 @@ public class Arena {
 		}
 	}
 
-	// ********** Beautified ********** //
+	/**
+	 * The first in a set of three methods that help updateEdge determine on which edge a given pokemon is.
+	 * This methods determines the direction of the edge this pokemon is on.
+	 * @param pos
+	 * @param edge
+	 * @param type
+	 * @param g
+	 * @return
+	 */
+	private static boolean isOnEdge(geo_location pos, edge_data edge, int type, directed_weighted_graph g) {
 
+		int src = g.getNode(edge.getSrc()).getKey();
+		int dest = g.getNode(edge.getDest()).getKey();
+		if(type<0 && dest>src) {return false;}
+		if(type>0 && src>dest) {return false;}
+		return isOnEdge(pos,src, dest, g);
 
-	private static boolean isOnEdge(geo_location p, geo_location src, geo_location dest ) {
+	}
 
+	/**
+	 * The second in a set of three methods that help updateEdge determine on which edge a given pokemon is.
+	 * This methods translates src and dest nodes to geoLocations.
+	 * @param pos
+	 * @param s
+	 * @param d
+	 * @param g
+	 * @return
+	 */
+	private static boolean isOnEdge(geo_location pos, int s, int d, directed_weighted_graph g) {
+
+		geo_location src = g.getNode(s).getLocation();
+		geo_location dest = g.getNode(d).getLocation();
+		return isOnEdge(pos,src,dest);
+
+	}
+
+	/**
+	 * The third and final in a set of three methods that help updateEdge determine on which edge a given pokemon is.
+	 * This methods determines whether the pokemon is actually on given edge by its position and the positions of its
+	 * relative nodes
+	 * @param pos
+	 * @param src
+	 * @param dest
+	 * @return
+	 */
+	private static boolean isOnEdge(geo_location pos, geo_location src, geo_location dest ) {
 		boolean ans = false;
 		double dist = src.distance(dest);
-		double d1 = src.distance(p) + p.distance(dest);
+		double d1 = src.distance(pos) + pos.distance(dest);
 		if(dist>d1- EPS) {ans = true;}
 		return ans;
 	}
-	private static boolean isOnEdge(geo_location p, int s, int d, directed_weighted_graph g) {
-		geo_location src = g.getNode(s).getLocation();
-		geo_location dest = g.getNode(d).getLocation();
-		return isOnEdge(p,src,dest);
-	}
-	private static boolean isOnEdge(geo_location p, edge_data e, int type, directed_weighted_graph g) {
-		int src = g.getNode(e.getSrc()).getKey();
-		int dest = g.getNode(e.getDest()).getKey();
-		if(type<0 && dest>src) {return false;}
-		if(type>0 && src>dest) {return false;}
-		return isOnEdge(p,src, dest, g);
-	}
+
+	// ********** Beautified ********** //
 
 	private static Range2D GraphRange(directed_weighted_graph g) {
 		Iterator<node_data> itr = g.getV().iterator();
