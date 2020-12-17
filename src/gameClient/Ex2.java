@@ -139,11 +139,12 @@ public class Ex2 implements Runnable {
         try {
             init(level);
             agentsPath();
-
+            System.out.println(game.isRunning());
             while (game.isRunning()) {
+                System.out.println(game.timeToEnd());
                 Thread.sleep(1500);
                 for (CL_Agent agent : agents) {
-
+                    System.out.println(game.move());
                     int pokeSrc = agent.getCurrPokemon().get_edge().getSrc();
                     int pokeDest = agent.getCurrPokemon().get_edge().getDest();
                     List<node_data> myPath = agent.getCurrPath();
@@ -169,7 +170,6 @@ public class Ex2 implements Runnable {
                         }
                     }
                 }
-                System.out.println(game.move());
             }
         } catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
