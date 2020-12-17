@@ -24,109 +24,116 @@ import java.util.List;
 public class Arena {
 
 	public static final double EPS =0.00001;
+
 	private directed_weighted_graph graph;
 	private List<CL_Agent> agents;
 	private List<CL_Pokemon> pokemons;
 	private List<String> info;
+
 	private static Point3D MIN = new Point3D(0, 100,0);
 	private static Point3D MAX = new Point3D(0, 100,0);
 
-	public Arena() {;
+	/**
+	 * A simple constructor
+	 */
+	public Arena() {
 		info = new ArrayList<>();
 	}
 
-	private Arena(directed_weighted_graph graph, List<CL_Agent> agents, List<CL_Pokemon> pokemons) {
-		this.graph = graph;
-		this.agents = agents;
+
+	// ********** Setters & Getters **********//
+
+	public void setPokemons(List<CL_Pokemon> pokemons) {
 		this.pokemons = pokemons;
 	}
-	public void setPokemons(List<CL_Pokemon> f) {
-		this.pokemons = f;
+
+	public void setAgents(List<CL_Agent> agents) {
+		this.agents = agents;
 	}
-	public void setAgents(List<CL_Agent> f) {
-		this.agents = f;
-	}
-	public void setGraph(directed_weighted_graph g) {this.graph =g;}//init();}
-	private void init( ) {
-		MIN=null; MAX=null;
-		double x0=0,x1=0,y0=0,y1=0;
-		Iterator<node_data> iter = graph.getV().iterator();
-		while(iter.hasNext()) {
-			geo_location c = iter.next().getLocation();
-			if(MIN==null) {x0 = c.x(); y0=c.y(); x1=x0;y1=y0;MIN = new Point3D(x0,y0);}
-			if(c.x() < x0) {x0=c.x();}
-			if(c.y() < y0) {y0=c.y();}
-			if(c.x() > x1) {x1=c.x();}
-			if(c.y() > y1) {y1=c.y();}
-		}
-		double dx = x1-x0, dy = y1-y0;
-		MIN = new Point3D(x0-dx/10,y0-dy/10);
-		MAX = new Point3D(x1+dx/10,y1+dy/10);
-		
-	}
+
+	public void setGraph(directed_weighted_graph graph) {this.graph =graph;}
+
 	public List<CL_Agent> getAgents() {return agents;}
+
 	public List<CL_Pokemon> getPokemons() {return pokemons;}
 
-	
 	public directed_weighted_graph getGraph() {
 		return graph;
 	}
+
 	public List<String> getInfo() {
 		return info;
 	}
-	public void setInfo(List<String> info) {
-		this.info = info;
-	}
 
-	////////////////////////////////////////////////////
-	public static List<CL_Agent> getAgents(String aa, directed_weighted_graph gg) {
-		ArrayList<CL_Agent> ans = new ArrayList<CL_Agent>();
+	// ********** Setters & Getters **********//
+
+
+	// ********** Beautified ********** //
+
+	public static List<CL_Agent> parseAgents(String agentsJSON, directed_weighted_graph g) {
+
+		ArrayList<CL_Agent> agents = new ArrayList<>();
+
 		try {
-			JSONObject ttt = new JSONObject(aa);
-			JSONArray ags = ttt.getJSONArray("Agents");
-			for(int i=0;i<ags.length();i++) {
-				CL_Agent c = new CL_Agent(gg,0);
-				c.update(ags.get(i).toString());
-				ans.add(c);
+			JSONObject agentsJ = new JSONObject(agentsJSON);
+			JSONArray agntArray = agentsJ.getJSONArray("Agents");
+
+			for(int i=0; i < agntArray.length(); i++)
+			{
+				CL_Agent agent = new CL_Agent(g,0);
+				agent.update(agntArray.get(i).toString());
+				agents.add(agent);
 			}
 			//= getJSONArray("Agents");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return ans;
+		return agents;
 	}
-	public static ArrayList<CL_Pokemon> json2Pokemons(String fs) {
-		ArrayList<CL_Pokemon> ans = new  ArrayList<CL_Pokemon>();
+
+	public static ArrayList<CL_Pokemon> parsePokemons(String pokemonsJSON) {
+
+		ArrayList<CL_Pokemon> pokemons = new  ArrayList<>();
+
 		try {
-			JSONObject ttt = new JSONObject(fs);
-			JSONArray ags = ttt.getJSONArray("Pokemons");
-			for(int i=0;i<ags.length();i++) {
-				JSONObject pp = ags.getJSONObject(i);
-				JSONObject pk = pp.getJSONObject("Pokemon");
-				int t = pk.getInt("type");
-				double v = pk.getDouble("value");
-				//double s = 0;//pk.getDouble("speed");
-				String p = pk.getString("pos");
-				CL_Pokemon f = new CL_Pokemon(new Point3D(p), t, v, 0, null);
-				ans.add(f);
+
+			JSONObject pkmnsJ = new JSONObject(pokemonsJSON);
+			JSONArray pkmnArray = pkmnsJ.getJSONArray("Pokemons");
+
+			for(int i=0; i < pkmnArray.length(); i++)
+			{
+				//Parsing
+				JSONObject pokemonJ = pkmnArray.getJSONObject(i);
+				JSONObject pkJ = pokemonJ.getJSONObject("Pokemon");
+
+				//Getting the actual values
+				int type = pkJ.getInt("type");
+				double value = pkJ.getDouble("value");
+				String pos = pkJ.getString("pos");
+
+				//Setting the actual values to a new pokemon
+				CL_Pokemon pokemon = new CL_Pokemon(new Point3D(pos), type, value, 0, null);
+				pokemons.add(pokemon);
+			}
+		} catch (JSONException e) {e.printStackTrace();}
+
+		return pokemons;
+	}
+
+	public static void updateEdge(CL_Pokemon pokemon, directed_weighted_graph g) {
+
+		for(node_data node : g.getV())
+		{
+			for(edge_data edge : g.getE(node.getKey()))
+			{
+				boolean found = isOnEdge(pokemon.getLocation(), edge, pokemon.getType(), g);
+				if (found) pokemon.set_edge(edge);
 			}
 		}
-		catch (JSONException e) {e.printStackTrace();}
-		return ans;
 	}
-	public static void updateEdge(CL_Pokemon fr, directed_weighted_graph g) {
-		//	oop_edge_data ans = null;
-		Iterator<node_data> itr = g.getV().iterator();
-		while(itr.hasNext()) {
-			node_data v = itr.next();
-			Iterator<edge_data> iter = g.getE(v.getKey()).iterator();
-			while(iter.hasNext()) {
-				edge_data e = iter.next();
-				boolean f = isOnEdge(fr.getLocation(), e,fr.getType(), g);
-				if(f) {fr.set_edge(e);}
-			}
-		}
-	}
+
+	// ********** Beautified ********** //
+
 
 	private static boolean isOnEdge(geo_location p, geo_location src, geo_location dest ) {
 
@@ -176,5 +183,31 @@ public class Arena {
 		Range2Range ans = new Range2Range(world, frame);
 		return ans;
 	}
+
+
+
+	// ********** Looks Unnecessary ********** //
+
+	/*private void init( ) {
+		MIN=null; MAX=null;
+		double x0=0,x1=0,y0=0,y1=0;
+		Iterator<node_data> iter = graph.getV().iterator();
+		while(iter.hasNext()) {
+			geo_location c = iter.next().getLocation();
+			if(MIN==null) {x0 = c.x(); y0=c.y(); x1=x0;y1=y0;MIN = new Point3D(x0,y0);}
+			if(c.x() < x0) {x0=c.x();}
+			if(c.y() < y0) {y0=c.y();}
+			if(c.x() > x1) {x1=c.x();}
+			if(c.y() > y1) {y1=c.y();}
+		}
+		double dx = x1-x0, dy = y1-y0;
+		MIN = new Point3D(x0-dx/10,y0-dy/10);
+		MAX = new Point3D(x1+dx/10,y1+dy/10);
+
+}*/
+
+	/*public void setInfo(List<String> info) {
+		this.info = info;
+	}*/
 
 }
