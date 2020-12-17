@@ -7,7 +7,8 @@ import api.node_data;
 import gameClient.util.Point3D;
 import org.json.JSONObject;
 
-public class CL_Agent {
+public class Agent {
+
 		public static final double EPS = 0.0001;
 		private static int _count = 0;
 		private static int _seed = 3331;
@@ -23,7 +24,7 @@ public class CL_Agent {
 		private double _value;
 		
 		
-		public CL_Agent(directed_weighted_graph g, int start_node) {
+		public Agent(directed_weighted_graph g, int start_node) {
 			_gg = g;
 			setMoney(0);
 			this._curr_node = _gg.getNode(start_node);

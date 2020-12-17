@@ -97,7 +97,7 @@ public class MyFrame extends JFrame{
 		}
 	}
 	private void drawAgants(Graphics g) {
-		List<CL_Agent> rs = _ar.getAgents();
+		List<Agent> rs = _ar.getAgents();
 	//	Iterator<OOP_Point3D> itr = rs.iterator();
 		g.setColor(Color.red);
 		int i=0;

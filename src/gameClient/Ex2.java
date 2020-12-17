@@ -84,13 +84,13 @@ public class Ex2 implements Runnable {
 	 */
 	private static void moveAgants(game_service game, directed_weighted_graph gg) {
 		String movement = game.move();
-		List<CL_Agent> log = Arena.parseAgents(movement, gg);
+		List<Agent> log = Arena.parseAgents(movement, gg);
 		arena.setAgents(log);
 		String fs = game.getPokemons();
 		List<CL_Pokemon> ffs = Arena.parsePokemons(fs);
 		arena.setPokemons(ffs);
 		for (int i = 0; i < log.size(); i++) {
-			CL_Agent ag = log.get(i);
+			Agent ag = log.get(i);
 			int id = ag.getID();
 			int dest = ag.getNextNode();
 			int src = ag.getSrcNode();

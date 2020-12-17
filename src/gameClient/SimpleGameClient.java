@@ -36,9 +36,9 @@ public class SimpleGameClient {
 		while(game.isRunning()) {
 			long t = game.timeToEnd();
 			String lg = game.move();
-			List<CL_Agent> log = Arena.parseAgents(lg, gg);
+			List<Agent> log = Arena.parseAgents(lg, gg);
 			for(int a=0;a< log.size();a++) {
-				CL_Agent r = log.get(a);
+				Agent r = log.get(a);
 				int dest = r.getNextNode();
 				int src = r.getSrcNode();
 				int id = r.getID();

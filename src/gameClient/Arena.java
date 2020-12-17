@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class Arena {
 	public static final double EPS =0.00001;
 
 	private directed_weighted_graph graph;
-	private List<CL_Agent> agents;
+	private List<Agent> agents;
 	private List<CL_Pokemon> pokemons;
 	private List<String> info;
 
@@ -46,9 +45,9 @@ public class Arena {
 	 * @param g
 	 * @return
 	 */
-	public static List<CL_Agent> parseAgents(String agentsJSON, directed_weighted_graph g) {
+	public static List<Agent> parseAgents(String agentsJSON, directed_weighted_graph g) {
 
-		ArrayList<CL_Agent> agents = new ArrayList<>();
+		ArrayList<Agent> agents = new ArrayList<>();
 
 		try {
 			JSONObject agentsJ = new JSONObject(agentsJSON);
@@ -56,7 +55,7 @@ public class Arena {
 
 			for(int i=0; i < agntArray.length(); i++)
 			{
-				CL_Agent agent = new CL_Agent(g,0);
+				Agent agent = new Agent(g,0);
 				agent.update(agntArray.get(i).toString());
 				agents.add(agent);
 			}
@@ -125,13 +124,13 @@ public class Arena {
 		this.pokemons = pokemons;
 	}
 
-	public void setAgents(List<CL_Agent> agents) {
+	public void setAgents(List<Agent> agents) {
 		this.agents = agents;
 	}
 
 	public void setGraph(directed_weighted_graph graph) {this.graph =graph;}
 
-	public List<CL_Agent> getAgents() {return agents;}
+	public List<Agent> getAgents() {return agents;}
 
 	public List<CL_Pokemon> getPokemons() {return pokemons;}
 
