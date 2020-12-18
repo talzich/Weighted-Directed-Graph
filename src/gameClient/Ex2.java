@@ -121,6 +121,7 @@ public class Ex2 implements Runnable {
 	 */
 	private static int nextNode(directed_weighted_graph graph, int curr, Agent agent) {
 
+		//For the first roung
 		if(pathMap == null)
 		{
 			initPathMap();
@@ -129,8 +130,10 @@ public class Ex2 implements Runnable {
 		int next = -1;
 
 
-		//Check agent is currently chasing a specific pokemon
+		//Check if agent is assigned with a pokemon
 		List<node_data> currPath = pathMap.get(agent);
+
+		//If an agent does not have a path, it 
 		if(currPath != null){
 			if (!currPath.isEmpty()){
 				next = currPath.get(0).getKey();
@@ -143,9 +146,11 @@ public class Ex2 implements Runnable {
 		dw_graph_algorithms algo = new DWGraph_Algo();
 		algo.init(graph);
 		double shortestDist = Double.POSITIVE_INFINITY;
+		Pokemon target = null;
 		//This loop's purpose is to iterate through all the pokemons in the graph and choose the one we are closest to
 		for (Pokemon pokemon : arena.getPokemons()){
 			Arena.updateEdge(pokemon, graph);
+			if(pokemon.isChased()) continue;
 			int pokeSrc = pokemon.getEdge().getSrc();
 			int pokeDest = pokemon.getEdge().getDest();
 			List<node_data> potentialPath = algo.shortestPath(curr, pokeSrc);
@@ -157,13 +162,17 @@ public class Ex2 implements Runnable {
 				shortestDist = dist;
 				pathMap.put(agent, potentialPath);
 				next = potentialPath.get(0).getKey();
+				target = pokemon;
 			}
-
 		}
 
+		target.setChased();
 		return next;
 	}
 
+	/**
+	 * This method initializes the pathMap for each agent
+	 */
 	private static void initPathMap() {
 		pathMap = new HashMap<>();
 		for (Agent agent : arena.getAgents()){
@@ -171,8 +180,6 @@ public class Ex2 implements Runnable {
 		}
 
 	}
-
-	///////////////////////////////////////////
 
 	/**
 	 * This method initializes everything that needs to be initialized before our game starts.

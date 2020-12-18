@@ -10,7 +10,7 @@ public class Pokemon {
 	private Point3D pos;
 	private double minDist;
 	private int minRo;
-	boolean isChased;
+	private boolean isChased;
 
 	/**
 	 * A simple constructor
@@ -35,6 +35,10 @@ public class Pokemon {
 	 */
 	public String toString() {return "Pokemon:{value="+ value +", type= "+ type +"}";}
 
+	public boolean isChased(){
+		return this.isChased;
+	}
+
 
 	// ********** Getters & Setters ********** //
 	public edge_data getEdge() { return edge; }
@@ -44,6 +48,15 @@ public class Pokemon {
 	public Point3D getLocation() { return pos; }
 
 	public int getType() { return type; }
+
+	public void setChased(){
+		this.isChased = true;
+	}
+
+	public void setUnchased(){
+		this.isChased = false;
+	}
+
 	// ********** Getters & Setters ********** //
 
 
