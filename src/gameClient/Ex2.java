@@ -62,6 +62,11 @@ public class Ex2 implements Runnable {
 		long downTime = 100;
 
 		while (game.isRunning()) {
+			if(game.timeToEnd() < 1000)
+			{
+				System.out.println(game.toString());
+				System.exit(0);
+			}
 			moveAgants(game, graph);
 			try {
 				if (ind % 1 == 0) {
@@ -74,25 +79,17 @@ public class Ex2 implements Runnable {
 			}
 		}
 
-		String res = game.toString();
-		System.out.println(game.timeToEnd());
-		System.out.println(res);
-		System.exit(0);
 	}
-
-	//Yet to beautify
 
 	/**
 	 * Moves each of the agents along the edge,
-	 * in case the agent is on a node the next destination (next edge) is chosen (randomly).
-	 *
+	 * in case the agent is on a node the next destination (next edge) is chosen.
 	 * @param game
 	 * @param g
 	 * @param
 	 */
 	private static void moveAgants(game_service game, directed_weighted_graph g) {
 		String movement = game.move();
-		System.out.println(movement);
 		List<Agent> agents = Arena.parseAgents(movement, g);
 		arena.setAgents(agents);
 		String pokeString = game.getPokemons();
@@ -113,15 +110,17 @@ public class Ex2 implements Runnable {
 	}
 
 	/**
-	 * a very simple random walk implementation!
-	 *
-	 * @param graph
-	 * @param curr
-	 * @return
+	 * This method dictates for specified agent which pokemon he should chase next, and in turn, what is
+	 * the path he has to take producing a finite list of 'next nodes' we will exhaust before calling
+	 * this function with that agent again.
+	 * @param graph - the underlying graph of this level of the game.
+	 * @param curr - current node specified agent is on.
+	 * @param agent - the agent to which we want to find the next node.
+	 * @return int - the key of the next node.
 	 */
 	private static int nextNode(directed_weighted_graph graph, int curr, Agent agent) {
 
-		//For the first roung
+		//For the first round
 		if(pathMap == null)
 		{
 			initPathMap();
@@ -133,7 +132,7 @@ public class Ex2 implements Runnable {
 		//Check if agent is assigned with a pokemon
 		List<node_data> currPath = pathMap.get(agent);
 
-		//If an agent does not have a path, it 
+		//If an agent has a path, we don't need to find him a new one, just exhaust it.
 		if(currPath != null){
 			if (!currPath.isEmpty()){
 				next = currPath.get(0).getKey();
@@ -142,21 +141,33 @@ public class Ex2 implements Runnable {
 			}
 		}
 
+		//In case this agent has no path, we need  to find him a pokemon to chase
 
+		//Needed to figure out shortest path
 		dw_graph_algorithms algo = new DWGraph_Algo();
 		algo.init(graph);
 		double shortestDist = Double.POSITIVE_INFINITY;
+
+		//Will be the pokemon this agent will be chasing
 		Pokemon target = null;
-		//This loop's purpose is to iterate through all the pokemons in the graph and choose the one we are closest to
+
+		//This loop's purpose is to iterate through all the pokemons in the graph and choose
+		// the one this agent is closest to
 		for (Pokemon pokemon : arena.getPokemons()){
 			Arena.updateEdge(pokemon, graph);
+
+			//We don't want to assign this pokemon to this agent if it is already chased by another agent
 			if(pokemon.isChased()) continue;
+
 			int pokeSrc = pokemon.getEdge().getSrc();
 			int pokeDest = pokemon.getEdge().getDest();
 			List<node_data> potentialPath = algo.shortestPath(curr, pokeSrc);
+
+			//The shortest path list contains at index 0 the current node
 			potentialPath.remove(0);
 
 			double dist = potentialPath.size();
+			pokemon.setUnchased();
 			if(dist == 0) return pokeDest;
 			if(dist < shortestDist) {
 				shortestDist = dist;
