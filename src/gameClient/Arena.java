@@ -92,7 +92,7 @@ public class Arena {
 				String pos = pkJ.getString("pos");
 
 				//Setting the actual values to a new pokemon
-				Pokemon pokemon = new Pokemon(new Point3D(pos), type, value, 0, null);
+				Pokemon pokemon = new Pokemon(new Point3D(pos), type, value, null);
 				pokemons.add(pokemon);
 			}
 		} catch (JSONException e) {e.printStackTrace();}
@@ -112,7 +112,7 @@ public class Arena {
 			for(edge_data edge : g.getE(node.getKey()))
 			{
 				boolean found = isOnEdge(pokemon.getLocation(), edge, pokemon.getType(), g);
-				if (found) pokemon.set_edge(edge);
+				if (found) pokemon.setEdge(edge);
 			}
 		}
 	}

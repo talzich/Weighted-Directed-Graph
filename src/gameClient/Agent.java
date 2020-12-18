@@ -164,7 +164,7 @@ public class Agent {
             geo_location src = graph.getNode(getCurrEdge().getSrc()).getLocation();
             double de = src.distance(dest);
             double dist = position.distance(dest);
-            if (this.getCurrFruit().get_edge() == this.getCurrEdge()) {
+            if (this.getCurrFruit().getEdge() == this.getCurrEdge()) {
                 dist = currFruit.getLocation().distance(this.position);
             }
             double norm = dist / de;

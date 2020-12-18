@@ -4,21 +4,20 @@ import gameClient.util.Point3D;
 import org.json.JSONObject;
 
 public class Pokemon {
-	private edge_data _edge;
-	private double _value;
-	private int _type;
-	private Point3D _pos;
-	private double min_dist;
-	private int min_ro;
+	private edge_data edge;
+	private double value;
+	private int type;
+	private Point3D pos;
+	private double minDist;
+	private int minRo;
 	
-	public Pokemon(Point3D p, int t, double v, double s, edge_data e) {
-		_type = t;
-	//	_speed = s;
-		_value = v;
-		set_edge(e);
-		_pos = p;
-		min_dist = -1;
-		min_ro = -1;
+	public Pokemon(Point3D p, int t, double v, edge_data e) {
+		type = t;
+		value = v;
+		setEdge(e);
+		pos = p;
+		minDist = -1;
+		minRo = -1;
 	}
 	public static Pokemon init_from_json(String json) {
 		Pokemon ans = null;
@@ -32,35 +31,35 @@ public class Pokemon {
 		}
 		return ans;
 	}
-	public String toString() {return "F:{v="+_value+", t="+_type+"}";}
-	public edge_data get_edge() {
-		return _edge;
+	public String toString() {return "F:{v="+ value +", t="+ type +"}";}
+	public edge_data getEdge() {
+		return edge;
 	}
 
-	public void set_edge(edge_data _edge) {
-		this._edge = _edge;
+	public void setEdge(edge_data edge) {
+		this.edge = edge;
 	}
 
 	public Point3D getLocation() {
-		return _pos;
+		return pos;
 	}
-	public int getType() {return _type;}
+	public int getType() {return type;}
 //	public double getSpeed() {return _speed;}
-	public double getValue() {return _value;}
+	public double getValue() {return value;}
 
-	public double getMin_dist() {
-		return min_dist;
+	public double getMinDist() {
+		return minDist;
 	}
 
-	public void setMin_dist(double mid_dist) {
-		this.min_dist = mid_dist;
+	public void setMinDist(double mid_dist) {
+		this.minDist = mid_dist;
 	}
 
-	public int getMin_ro() {
-		return min_ro;
+	public int getMinRo() {
+		return minRo;
 	}
 
-	public void setMin_ro(int min_ro) {
-		this.min_ro = min_ro;
+	public void setMinRo(int minRo) {
+		this.minRo = minRo;
 	}
 }

@@ -167,7 +167,7 @@ public class Ex2 implements Runnable {
 			if (maxAgents < pokemons.size()) {
 
 				for (int i = 0; i < maxAgents; i++) {
-					edge_data edge = pokemons.get(i).get_edge();
+					edge_data edge = pokemons.get(i).getEdge();
 					game.addAgent(edge.getSrc());
 				}
 			}
@@ -176,7 +176,7 @@ public class Ex2 implements Runnable {
 				int diff = maxAgents - pokemons.size();
 
 				for (int i = 0; i < pokemons.size(); i++) {
-					edge_data edge = pokemons.get(i).get_edge();
+					edge_data edge = pokemons.get(i).getEdge();
 					game.addAgent(edge.getSrc());
 				}
 
@@ -232,7 +232,7 @@ public class Ex2 implements Runnable {
 				int type = pk.getInt("type");
 				double value = pk.getDouble("value");
 				String pos = pk.getString("pos");
-				Pokemon pokemon = new Pokemon(new Point3D(pos), type, value, 0, null);
+				Pokemon pokemon = new Pokemon(new Point3D(pos), type, value,null);
 				pokemons.add(pokemon);
 			}
 		} catch (JSONException e) {
