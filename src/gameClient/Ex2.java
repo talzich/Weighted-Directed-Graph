@@ -11,6 +11,14 @@ import java.util.*;
 
 public class Ex2 implements Runnable {
 
+	//This list will update while the game is running to hold all the src nodes of edges pokemons are currently on
+	private List<Integer> pkmnSrcs;
+
+	/*
+		This map holds the list of nodes which is the path agent has to take in order to get to the
+		pokemon he is currently chasing
+	 */
+	private static HashMap<Agent, List<node_data>> pathMap;
 	private static MyFrame window;
 	private static Arena arena;
 	private int level;
@@ -79,24 +87,25 @@ public class Ex2 implements Runnable {
 	 * in case the agent is on a node the next destination (next edge) is chosen (randomly).
 	 *
 	 * @param game
-	 * @param gg
+	 * @param g
 	 * @param
 	 */
-	private static void moveAgants(game_service game, directed_weighted_graph gg) {
+	private static void moveAgants(game_service game, directed_weighted_graph g) {
 		String movement = game.move();
-		List<Agent> log = Arena.parseAgents(movement, gg);
-		arena.setAgents(log);
-		String fs = game.getPokemons();
-		List<Pokemon> ffs = Arena.parsePokemons(fs);
-		arena.setPokemons(ffs);
-		for (int i = 0; i < log.size(); i++) {
-			Agent ag = log.get(i);
+		System.out.println(movement);
+		List<Agent> agents = Arena.parseAgents(movement, g);
+		arena.setAgents(agents);
+		String pokeString = game.getPokemons();
+		List<Pokemon> pokemons = Arena.parsePokemons(pokeString);
+		arena.setPokemons(pokemons);
+		for (int i = 0; i < agents.size(); i++) {
+			Agent ag = agents.get(i);
 			int id = ag.getID();
 			int dest = ag.getNextNode();
-			int src = ag.getSrcNode();
+			int currNode = ag.getCurrNode();
 			double v = ag.getValue();
 			if (dest == -1) {
-				dest = nextNode(gg, src);
+				dest = nextNode(g, currNode, ag);
 				game.chooseNextEdge(ag.getID(), dest);
 				System.out.println("Agent: " + id + ", val: " + v + "   turned to node: " + dest);
 			}
@@ -110,20 +119,57 @@ public class Ex2 implements Runnable {
 	 * @param curr
 	 * @return
 	 */
-	private static int nextNode(directed_weighted_graph graph, int curr) {
+	private static int nextNode(directed_weighted_graph graph, int curr, Agent agent) {
 
-		int ans;
-		Collection<edge_data> outEdges = graph.getE(curr);
-		Iterator<edge_data> itr = outEdges.iterator();
-		int s = outEdges.size();
-		int r = (int) (Math.random() * s);
-		int i = 0;
-		while (i < r) {
-			itr.next();
-			i++;
+		if(pathMap == null)
+		{
+			initPathMap();
 		}
-		ans = itr.next().getDest();
-		return ans;
+
+		int next = -1;
+
+
+		//Check agent is currently chasing a specific pokemon
+		List<node_data> currPath = pathMap.get(agent);
+		if(currPath != null){
+			if (!currPath.isEmpty()){
+				next = currPath.get(0).getKey();
+				currPath.remove(0);
+				return next;
+			}
+		}
+
+
+		dw_graph_algorithms algo = new DWGraph_Algo();
+		algo.init(graph);
+		double shortestDist = Double.POSITIVE_INFINITY;
+		//This loop's purpose is to iterate through all the pokemons in the graph and choose the one we are closest to
+		for (Pokemon pokemon : arena.getPokemons()){
+			Arena.updateEdge(pokemon, graph);
+			int pokeSrc = pokemon.getEdge().getSrc();
+			int pokeDest = pokemon.getEdge().getDest();
+			List<node_data> potentialPath = algo.shortestPath(curr, pokeSrc);
+			potentialPath.remove(0);
+
+			double dist = potentialPath.size();
+			if(dist == 0) return pokeDest;
+			if(dist < shortestDist) {
+				shortestDist = dist;
+				pathMap.put(agent, potentialPath);
+				next = potentialPath.get(0).getKey();
+			}
+
+		}
+
+		return next;
+	}
+
+	private static void initPathMap() {
+		pathMap = new HashMap<>();
+		for (Agent agent : arena.getAgents()){
+			pathMap.put(agent, null);
+		}
+
 	}
 
 	///////////////////////////////////////////
@@ -134,6 +180,7 @@ public class Ex2 implements Runnable {
 	 * @throws JSONException
 	 */
 	private void init(game_service game) throws JSONException {
+
 
 		//The JSON-like Strings received from server
 		String graphJSON = game.getGraph();

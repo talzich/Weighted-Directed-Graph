@@ -128,7 +128,7 @@ public class Agent {
 
 
     // ********** Setters & Getters ********** //
-    public int getSrcNode() {return this.currNode.getKey();}
+    public int getCurrNode() {return this.currNode.getKey();}
 
     private void setValue(double value) {this.value = value;}
 

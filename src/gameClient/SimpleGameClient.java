@@ -40,7 +40,7 @@ public class SimpleGameClient {
 			for(int a=0;a< log.size();a++) {
 				Agent r = log.get(a);
 				int dest = r.getNextNode();
-				int src = r.getSrcNode();
+				int src = r.getCurrNode();
 				int id = r.getID();
 				if(dest==-1) {
 					int new_dest = nextNode(gg, src);

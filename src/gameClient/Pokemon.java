@@ -10,6 +10,7 @@ public class Pokemon {
 	private Point3D pos;
 	private double minDist;
 	private int minRo;
+	boolean isChased;
 
 	/**
 	 * A simple constructor
