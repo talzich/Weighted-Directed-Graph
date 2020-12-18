@@ -87,7 +87,7 @@ public class Ex2 implements Runnable {
 		List<Agent> log = Arena.parseAgents(movement, gg);
 		arena.setAgents(log);
 		String fs = game.getPokemons();
-		List<CL_Pokemon> ffs = Arena.parsePokemons(fs);
+		List<Pokemon> ffs = Arena.parsePokemons(fs);
 		arena.setPokemons(ffs);
 		for (int i = 0; i < log.size(); i++) {
 			Agent ag = log.get(i);
@@ -140,7 +140,7 @@ public class Ex2 implements Runnable {
 		String pkmnJSON = game.getPokemons();
 
 		directed_weighted_graph graph = graphFromJSON(graphJSON);
-		List<CL_Pokemon> pokemons = pokemonFromJSON(pkmnJSON);
+		List<Pokemon> pokemons = pokemonFromJSON(pkmnJSON);
 
 		arena = new Arena();
 		arena.setGraph(graph);
@@ -220,8 +220,8 @@ public class Ex2 implements Runnable {
 		return graph;
 	}
 
-	private List<CL_Pokemon> pokemonFromJSON(String jsonString) throws JSONException{
-		List<CL_Pokemon> pokemons = new ArrayList<>();
+	private List<Pokemon> pokemonFromJSON(String jsonString) throws JSONException{
+		List<Pokemon> pokemons = new ArrayList<>();
 
 		try {
 			JSONObject origJson = new JSONObject(jsonString);
@@ -232,7 +232,7 @@ public class Ex2 implements Runnable {
 				int type = pk.getInt("type");
 				double value = pk.getDouble("value");
 				String pos = pk.getString("pos");
-				CL_Pokemon pokemon = new CL_Pokemon(new Point3D(pos), type, value, 0, null);
+				Pokemon pokemon = new Pokemon(new Point3D(pos), type, value, 0, null);
 				pokemons.add(pokemon);
 			}
 		} catch (JSONException e) {

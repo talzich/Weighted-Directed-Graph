@@ -20,7 +20,7 @@ public class Agent {
     private edge_data currEdge;
     private node_data currNode;
     private directed_weighted_graph graph;
-    private CL_Pokemon currFruit;
+    private Pokemon currFruit;
     private long _sg_dt;
 
     private double value;
@@ -146,7 +146,7 @@ public class Agent {
 
     public void setSpeed(double v) { this.speed = v; }
 
-    public CL_Pokemon getCurrFruit() { return currFruit; }
+    public Pokemon getCurrFruit() { return currFruit; }
 
     public edge_data getCurrEdge() { return this.currEdge; }
 
@@ -155,7 +155,7 @@ public class Agent {
 
 
     // ********** Not Sure ********** //
-    
+
     public void set_SDT(long ddtt) {
         long ddt = ddtt;
         if (this.currEdge != null) {

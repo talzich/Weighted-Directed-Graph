@@ -26,7 +26,7 @@ public class Arena {
 
 	private directed_weighted_graph graph;
 	private List<Agent> agents;
-	private List<CL_Pokemon> pokemons;
+	private List<Pokemon> pokemons;
 	private List<String> info;
 
 	private static Point3D MIN = new Point3D(0, 100,0);
@@ -71,9 +71,9 @@ public class Arena {
 	 * @param pokemonsJSON
 	 * @return
 	 */
-	public static ArrayList<CL_Pokemon> parsePokemons(String pokemonsJSON) {
+	public static ArrayList<Pokemon> parsePokemons(String pokemonsJSON) {
 
-		ArrayList<CL_Pokemon> pokemons = new  ArrayList<>();
+		ArrayList<Pokemon> pokemons = new  ArrayList<>();
 
 		try {
 
@@ -92,7 +92,7 @@ public class Arena {
 				String pos = pkJ.getString("pos");
 
 				//Setting the actual values to a new pokemon
-				CL_Pokemon pokemon = new CL_Pokemon(new Point3D(pos), type, value, 0, null);
+				Pokemon pokemon = new Pokemon(new Point3D(pos), type, value, 0, null);
 				pokemons.add(pokemon);
 			}
 		} catch (JSONException e) {e.printStackTrace();}
@@ -105,7 +105,7 @@ public class Arena {
 	 * @param pokemon
 	 * @param g
 	 */
-	public static void updateEdge(CL_Pokemon pokemon, directed_weighted_graph g) {
+	public static void updateEdge(Pokemon pokemon, directed_weighted_graph g) {
 
 		for(node_data node : g.getV())
 		{
@@ -120,7 +120,7 @@ public class Arena {
 
 	// ********** Setters & Getters **********//
 
-	public void setPokemons(List<CL_Pokemon> pokemons) {
+	public void setPokemons(List<Pokemon> pokemons) {
 		this.pokemons = pokemons;
 	}
 
@@ -132,7 +132,7 @@ public class Arena {
 
 	public List<Agent> getAgents() {return agents;}
 
-	public List<CL_Pokemon> getPokemons() {return pokemons;}
+	public List<Pokemon> getPokemons() {return pokemons;}
 
 	public directed_weighted_graph getGraph() {
 		return graph;

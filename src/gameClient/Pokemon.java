@@ -3,7 +3,7 @@ import api.edge_data;
 import gameClient.util.Point3D;
 import org.json.JSONObject;
 
-public class CL_Pokemon {
+public class Pokemon {
 	private edge_data _edge;
 	private double _value;
 	private int _type;
@@ -11,7 +11,7 @@ public class CL_Pokemon {
 	private double min_dist;
 	private int min_ro;
 	
-	public CL_Pokemon(Point3D p, int t, double v, double s, edge_data e) {
+	public Pokemon(Point3D p, int t, double v, double s, edge_data e) {
 		_type = t;
 	//	_speed = s;
 		_value = v;
@@ -20,8 +20,8 @@ public class CL_Pokemon {
 		min_dist = -1;
 		min_ro = -1;
 	}
-	public static CL_Pokemon init_from_json(String json) {
-		CL_Pokemon ans = null;
+	public static Pokemon init_from_json(String json) {
+		Pokemon ans = null;
 		try {
 			JSONObject p = new JSONObject(json);
 			int id = p.getInt("id");
