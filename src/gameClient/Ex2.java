@@ -125,7 +125,7 @@ public class Ex2 implements Runnable {
 		{
 			initPathMap();
 		}
-
+//
 		int next = -1;
 
 
