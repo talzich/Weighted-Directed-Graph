@@ -295,6 +295,4 @@ class AlgoTest {
         assertEquals(A.getGraph(),G1);
     }
 
-
-
 }
