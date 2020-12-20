@@ -14,9 +14,6 @@ import java.util.List;
 
 public class Ex2 implements Runnable {
 
-    //This list will update while the game is running to hold all the src nodes of edges pokemons are currently on
-    private List<Integer> pkmnSrcs;
-
     /*
         This map holds the list of nodes which is the path agent has to take in order to get to the
         pokemon he is currently chasing
@@ -41,7 +38,6 @@ public class Ex2 implements Runnable {
         login.init();
         try {
             while (login.isRunning()){
-                System.out.println(login.isRunning());
                 Thread.sleep(100);
             }
         } catch (InterruptedException e) {
