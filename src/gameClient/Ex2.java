@@ -22,11 +22,42 @@ public class Ex2 implements Runnable {
     private static MyFrame window;
     private static Arena arena;
 
-    private int level;
-    private int id;
+    private static int level;
+    private static int id;
+    private static boolean ranWithTerminal = false;
 
-    public static void main(String[] a) throws InterruptedException {
-        Thread client = new Thread(new Ex2());
+    public Ex2(String id, String level) {
+
+        this.id = Integer.parseInt(id);
+        this.level = Integer.parseInt(level);
+
+    }
+
+    public Ex2() {
+        GUI login = new GUI();
+        login.init();
+        try {
+            while (login.isRunning()) {
+                Thread.sleep(100);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        this.id = login.getId();
+        this.level = login.getLevel();
+    }
+
+
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread client;
+
+        if (args.length >= 2 && args[0] != null && args[1] != null)
+            client = new Thread(new Ex2(args[0], args[1]));
+
+        else
+            client = new Thread(new Ex2());
+
         client.start();
     }
 
@@ -34,18 +65,7 @@ public class Ex2 implements Runnable {
 
     @Override
     public synchronized void run() {
-        GUI login = new GUI();
-        login.init();
-        try {
-            while (login.isRunning()){
-                Thread.sleep(100);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        id = login.getId();
-        level = login.getLevel();
 
         game_service game = Game_Server_Ex2.getServer(level);
         game.login(id);
@@ -71,8 +91,7 @@ public class Ex2 implements Runnable {
         long downTime = 100;
 
         while (game.isRunning()) {
-            if(game.timeToEnd() < 1000)
-            {
+            if (game.timeToEnd() < 1000) {
                 System.out.println(game.toString());
                 System.exit(0);
             }
@@ -93,6 +112,7 @@ public class Ex2 implements Runnable {
     /**
      * Moves each of the agents along the edge,
      * in case the agent is on a node the next destination (next edge) is chosen.
+     *
      * @param game
      * @param g
      * @param
@@ -122,16 +142,16 @@ public class Ex2 implements Runnable {
      * This method dictates for specified agent which pokemon he should chase next, and in turn, what is
      * the path he has to take producing a finite list of 'next nodes' we will exhaust before calling
      * this function with that agent again.
+     *
      * @param graph - the underlying graph of this level of the game.
-     * @param curr - current node specified agent is on.
+     * @param curr  - current node specified agent is on.
      * @param agent - the agent to which we want to find the next node.
      * @return int - the key of the next node.
      */
     private static int nextNode(directed_weighted_graph graph, int curr, Agent agent) {
 
         //For the first round
-        if(pathMap == null)
-        {
+        if (pathMap == null) {
             initPathMap();
         }
 
@@ -142,8 +162,8 @@ public class Ex2 implements Runnable {
         List<node_data> currPath = pathMap.get(agent);
 
         //If an agent has a path, we don't need to find him a new one, just exhaust it.
-        if(currPath != null){
-            if (!currPath.isEmpty()){
+        if (currPath != null) {
+            if (!currPath.isEmpty()) {
                 next = currPath.get(0).getKey();
                 currPath.remove(0);
                 return next;
@@ -162,11 +182,11 @@ public class Ex2 implements Runnable {
 
         //This loop's purpose is to iterate through all the pokemons in the graph and choose
         // the one this agent is closest to
-        for (Pokemon pokemon : arena.getPokemons()){
+        for (Pokemon pokemon : arena.getPokemons()) {
             Arena.updateEdge(pokemon, graph);
 
             //We don't want to assign this pokemon to this agent if it is already chased by another agent
-            if(pokemon.isChased()) continue;
+            if (pokemon.isChased()) continue;
 
             int pokeSrc = pokemon.getEdge().getSrc();
             int pokeDest = pokemon.getEdge().getDest();
@@ -177,8 +197,8 @@ public class Ex2 implements Runnable {
 
             double dist = potentialPath.size();
             pokemon.setUnchased();
-            if(dist == 0) return pokeDest;
-            if(dist < shortestDist) {
+            if (dist == 0) return pokeDest;
+            if (dist < shortestDist) {
                 shortestDist = dist;
                 pathMap.put(agent, potentialPath);
                 next = potentialPath.get(0).getKey();
@@ -195,7 +215,7 @@ public class Ex2 implements Runnable {
      */
     private static void initPathMap() {
         pathMap = new HashMap<>();
-        for (Agent agent : arena.getAgents()){
+        for (Agent agent : arena.getAgents()) {
             pathMap.put(agent, null);
         }
 
@@ -203,6 +223,7 @@ public class Ex2 implements Runnable {
 
     /**
      * This method initializes everything that needs to be initialized before our game starts.
+     *
      * @param game - the info provided from server regarding the current level
      * @throws JSONException
      */
@@ -244,8 +265,7 @@ public class Ex2 implements Runnable {
                     edge_data edge = pokemons.get(i).getEdge();
                     game.addAgent(edge.getSrc());
                 }
-            }
-            else {
+            } else {
 
                 int diff = maxAgents - pokemons.size();
 
@@ -294,7 +314,7 @@ public class Ex2 implements Runnable {
         return graph;
     }
 
-    private List<Pokemon> pokemonFromJSON(String jsonString) throws JSONException{
+    private List<Pokemon> pokemonFromJSON(String jsonString) throws JSONException {
         List<Pokemon> pokemons = new ArrayList<>();
 
         try {
@@ -306,7 +326,7 @@ public class Ex2 implements Runnable {
                 int type = pk.getInt("type");
                 double value = pk.getDouble("value");
                 String pos = pk.getString("pos");
-                Pokemon pokemon = new Pokemon(new Point3D(pos), type, value,null);
+                Pokemon pokemon = new Pokemon(new Point3D(pos), type, value, null);
                 pokemons.add(pokemon);
             }
         } catch (JSONException e) {

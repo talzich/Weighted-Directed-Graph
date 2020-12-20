@@ -97,7 +97,7 @@ public class GUI implements ActionListener {
             exception.printStackTrace();
         }
 
-        
+
         System.out.println("Game starting");
         this.running = false;
 
