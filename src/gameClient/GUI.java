@@ -16,20 +16,20 @@ public class GUI implements ActionListener {
     private static boolean running = true;
     JFrame frame = new JFrame();
 
-    public int getLevel(){
+    public int getLevel() {
         return level;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return running;
     }
 
 
-    public void init(){
+    public void init() {
 
         running = true;
 
@@ -46,23 +46,23 @@ public class GUI implements ActionListener {
         panel.setLayout(null);
 
         IDLabel = new JLabel("ID");
-        IDLabel.setBounds(10,20,80,25);
+        IDLabel.setBounds(10, 20, 80, 25);
         panel.add(IDLabel);
 
         IDText = new JTextField(20);
-        IDText.setBounds(100,20,165,25);
+        IDText.setBounds(100, 20, 165, 25);
         panel.add(IDText);
 
         levelLabel = new JLabel("Level");
-        levelLabel.setBounds(10,50,80,25);
+        levelLabel.setBounds(10, 50, 80, 25);
         panel.add(levelLabel);
 
         levelText = new JTextField(20);
-        levelText.setBounds(100,50,165,25);
+        levelText.setBounds(100, 50, 165, 25);
         panel.add(levelText);
 
         button = new JButton("Start");
-        button.setBounds(220,110,80,25);
+        button.setBounds(220, 110, 80, 25);
         button.setFocusable(false);
         button.addActionListener(new GUI());
         panel.add(button);
@@ -79,28 +79,28 @@ public class GUI implements ActionListener {
     }
 
     @Override
-    public synchronized void  actionPerformed(ActionEvent e) {
+    public synchronized void actionPerformed(ActionEvent e) {
 
         String stringLevel = levelText.getText();
 
-        try{
+        try {
             level = Integer.parseInt(stringLevel);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
         String stringID = IDText.getText();
 
-        try{
+        try {
             id = Integer.parseInt(stringID);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
-        if(level >= 0 && level <= 23){
-            System.out.println("Game starting");
-            this.running = false;
-        }
+        
+        System.out.println("Game starting");
+        this.running = false;
+
 
     }
 }
