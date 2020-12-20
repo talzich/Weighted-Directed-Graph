@@ -10,6 +10,7 @@ public class Range {
 		set_min(min);
 		set_max(max);
 	}
+
 	public Range(Range x) {
 		this(x._min, x._max);
 	}
