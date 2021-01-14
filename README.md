@@ -1,49 +1,37 @@
-# Weighted Directed Graph
+# Weighted Directed Graph - Python
 
-This repository documents the implementation of three java interfaces
- ("node_data", "DWGraph_DS", DWGraph_Algo) that together define the second assignment in the Object Oriented Programing 
+This repository documents the implementation of two python interfaces
+ ("GraphInterface", "GraphAlgoInterface") that together define the fourth and last assignment in the Object Oriented Programing 
  class at Ariel University.
  
 ## Overview 
 
- The assignment was defined by the three interfaces mentioned in the previous section
- and its goal was split into two parts.In the first part we had to build a weighted directed graph data structure, 
- as defined by the `node_data` and `DWGraph_DS` interfaces. 
- We had to build a class that would operate on a graph such as the one we
- built in the first part of the assignment, as defined by the `dw_graph_algoritmns`
- interface. 
- 
- In the second part of the assignment we had to implement a 'Pokemon Game'. 
- Given a graph and Geo Locations of pokemons, we had to think of a way to get all the agents in the graph to chase pokemons and 
- catch them in the most efficient way we could find. 
+ The assignment was defined by the two interfaces mentioned in the previous section
+ and its goal was split into three parts.In the first part we had to build a weighted directed graph data structure, 
+ as defined by the 'GraphInterface' interface, build a class that would run all the algorithms from previous assignments as defined by the 'GraphAlgoInterface' interface. 
+ The second part of the assignment was mainly focused on the matpoltlib module and using it to plot our graphs. 
+ The third part of the assignment focused on comparing our implementation to the one in the previous assignment and the NetworkX module. 
+ This comparison is availeable in the wiki of this repository.
  
  
  #### Our Build
  
- In order to build a graph data structure, we used two primary hashmaps, as well as a 
- secondary third one (all details can be viewed in javadoc format in the `DWGraph_DS` class).
- In order to define what a node in such a graph looks like we Implemented 
- the `node_data` interface.
+ In order to build a graph data structure, we used dictionaries. 
+ In order to define what a node and an edge in such a graph looks like we designed the 'Node' and 'Edge' classes.
  
  #### Dijkstra's Algorithm
  
- Part of this assignment was to implement Dijkstra's algorithm, as we did in Ex1. We used the traditional 
+ Part of this assignment was to implement Dijkstra's algorithm, as we did in Ex2. We used the traditional 
  implementation, using priority queue to monitor which part of the graph we should explore next. 
  The algorithm's way of exploring the graph can be best explained by the following animation. 
  
  ![Dijkstra](https://upload.wikimedia.org/wikipedia/commons/5/57/Dijkstra_Animation.gif)
- 
- For the second part of the assignment we used, reformated and improved the efficiency of the provided classes - 
- 'Arena', 'Pokemon', 'Agent' and 'Ex2'. 
- The purpose was to find the best way to explore a graph and catch all the pokemons on it.
- 
- ## How to use
- 
-We provided a Ex2.jar file that can be run using double click like a .exe file or by using the Terminal\Command Line Prompt with the 
-command `java -jar Ex2.jar <ID> <Level number>`. Both ways require the .jar file to be located in the same directory as the source of the graph that will
-be provided to the game. 
 
-Cath'em All!
+ #### Kosaraju's Algorithm
+We implemented Kosaraju's algorithm using DFS algorithms and a stack to keep track of our explored nodes.
+We used the [following video] (https://www.youtube.com/watch?v=RpgcYiky7uw&ab_channel=TusharRoy-CodingMadeSimple) to help wrap our heads around the algorithm and design an implementation.
+
+
 
   
     
